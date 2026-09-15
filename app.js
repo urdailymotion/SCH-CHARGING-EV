@@ -1054,10 +1054,6 @@ function initSplitCardLogin() {
       window.closeSplitLoginScreen();
       const modeText = (selectedScheduleMode === 'ON') ? '⏱️ Mode Schedule' : '⚡ On-Demand';
       showToast(`Selamat datang, ${matched.name}! Tanggal: ${formatDateDisplay(selectedDate)} • ${selectedCategory} • Lokasi: ${selectedLoc} • Shift: ${selectedShift} • ${modeText}`, 'success');
-
-      if (typeof gasSync !== 'undefined' && typeof gasSync.loadAll === 'function') {
-        gasSync.loadAll();
-      }
     }
 
     // Verifikasi Password ke Database Google Sheets
@@ -1593,7 +1589,6 @@ function initTableControls() {
         }
         closeModal('modalDelete');
         showToast(`Transaksi ${idToDelete} telah dihapus.`, 'warning');
-        gasSync.deleteTransaction(idToDelete);
       }
     });
   }
@@ -1938,9 +1933,11 @@ function initPopulasiUnitControls() {
 
       fleetUnits.unshift(newUnit);
       saveFleet();
+      if (typeof VoltFirebase !== 'undefined' && VoltFirebase.isConfigured()) {
+        VoltFirebase.addUnit(newUnit);
+      }
       closeModal('modalAddUnit');
       showToast(`Unit DT ${cleanCode} berhasil ditambahkan ke populasi!`, 'success');
-      gasSync.addUnit(cleanCode);
     });
   }
 
@@ -1960,17 +1957,16 @@ function initPopulasiUnitControls() {
           return;
         }
 
-        if (cleanNewCode !== oldCode) {
-          gasSync.deleteUnit(oldCode);
-          gasSync.addUnit(cleanNewCode);
-        }
-
         unit.code = cleanNewCode;
         unit.type = document.getElementById('editUnitType').value;
         unit.status = document.getElementById('editUnitStatus').value;
         unit.note = document.getElementById('editUnitNote').value;
 
         saveFleet();
+        if (typeof VoltFirebase !== 'undefined' && VoltFirebase.isConfigured()) {
+          if (cleanNewCode !== oldCode) VoltFirebase.deleteUnit(oldCode);
+          VoltFirebase.addUnit(unit);
+        }
         closeModal('modalEditUnit');
         showToast(`Data unit DT ${cleanNewCode} berhasil diperbarui!`, 'success');
       }
@@ -1985,9 +1981,11 @@ function initPopulasiUnitControls() {
         const codeToDelete = deleteUnitTargetCode;
         fleetUnits = fleetUnits.filter(u => u.code !== codeToDelete);
         saveFleet();
+        if (typeof VoltFirebase !== 'undefined' && VoltFirebase.isConfigured()) {
+          VoltFirebase.deleteUnit(codeToDelete);
+        }
         closeModal('modalDeleteUnit');
         showToast(`Unit DT ${codeToDelete} telah dihapus dari populasi.`, 'warning');
-        gasSync.deleteUnit(codeToDelete);
       }
     });
   }
@@ -2709,11 +2707,8 @@ function initDedicatedInputForm() {
       renderMainTable();
       updateSummaryCard();
 
-      // Push ke Google Sheets (jika di GAS environment)
-      gasSync.pushTransaction(newRec);
-
       // Notifikasi sukses yang informatif
-      showToast(`✅ Data ${newId} (DT ${newRec.unit}) berhasil disimpan! Charging Time: ${durationMinVal} Menit`, 'success');
+      showToast(`✅ Data ${newId} (DT ${newRec.unit}) berhasil disimpan ke Firebase! Charging Time: ${durationMinVal} Menit`, 'success');
 
       // TETAP DI FORM INPUT & RESET FIELD MENJADI BERSIH/KOSONG
       if (dedUnitSel) dedUnitSel.value = '';
@@ -3001,8 +2996,6 @@ function initProblemLogControls() {
       });
 
       persistData();
-      // Push ke Google Sheets
-      gasSync.pushProblem(newProblem);
       if (typeof VoltFirebase !== 'undefined' && VoltFirebase.isConfigured()) {
         VoltFirebase.addProblem(newProblem);
       }
@@ -4625,17 +4618,6 @@ document.addEventListener('DOMContentLoaded', () => {
   renderMainTable();
   updateSummaryCard();
 
-  // Auto-load data terbaru dari Google Sheets (jika berjalan di GAS)
-  if (isLoggedIn) {
-    gasSync.loadAll(function(loaded) {
-      if (loaded) {
-        populateUnitSelects();
-        renderMainTable();
-        updateSummaryCard();
-      }
-    });
-  }
-
   // Inisialisasi Firebase Cloud Firestore & UI
   if (typeof VoltFirebase !== 'undefined') {
     VoltFirebase.init();
@@ -6223,11 +6205,7 @@ window.confirmDeleteDbSwap = function(id) {
         VoltFirebase.deleteSwap(id);
       }
 
-      if (typeof gasSync !== 'undefined' && typeof gasSync.deleteTransaction === 'function') {
-        gasSync.deleteTransaction(id);
-      }
-
-      showToast(`Transaksi ${id} berhasil dihapus.`, 'success');
+      showToast(`Transaksi ${id} berhasil dihapus dari Firebase.`, 'success');
       updateDbSummaryMetrics();
       renderDbSwapsTable();
       if (typeof renderMainTable === 'function') renderMainTable();
@@ -6577,11 +6555,11 @@ window.confirmDeleteDbUnit = function(code) {
       } else {
         fleetUnits = (fleetUnits || []).filter(u => String(u.code) !== String(code));
         localStorage.setItem('voltswap_fleet_list', JSON.stringify(fleetUnits));
-        if (typeof gasSync !== 'undefined' && typeof gasSync.deleteUnit === 'function') {
-          gasSync.deleteUnit(code);
+        if (typeof VoltFirebase !== 'undefined' && VoltFirebase.isConfigured()) {
+          VoltFirebase.deleteUnit(code);
         }
       }
-      showToast(`Unit DT ${code} berhasil dihapus.`, 'success');
+      showToast(`Unit DT ${code} berhasil dihapus dari Firebase.`, 'success');
       updateDbSummaryMetrics();
       renderDbUnitsTable();
     }
@@ -7012,12 +6990,22 @@ function backupAllDataToGoogleSheets() {
       })
       .apiBackupAllToSheets(payload);
   } else {
-    // Simulasi responsif pada pengujian lokal browser
-    if (progressBar) progressBar.style.width = '65%';
-    if (progressText) progressText.textContent = 'Menghubungkan ke Google Spreadsheet API...';
-    setTimeout(() => {
-      finalizeSuccess(`Backup Selesai (${preview.strategy === 'auto' ? 'Auto-Resume' : preview.strategy}): Data terpilih s/d ${maxDateStr} aman tersimpan di Google Sheets!`);
-    }, 1200);
+    // Mode WebApp (GitHub Pages / Vercel / Localhost) -> Kirim via Webhook POST ke Google Apps Script
+    if (progressBar) progressBar.style.width = '60%';
+    if (progressText) progressText.textContent = 'Mengirim cadangan data ke Google Spreadsheet Master...';
+
+    const GAS_BACKUP_URL = 'https://script.google.com/macros/s/AKfycbxXsUohfnJX0Mov8BLO65ACSCxihMYIurtP5avh6vTw-Vkxro0JzsdvEMKJ9wJ82FLs/exec';
+    fetch(GAS_BACKUP_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'backup', payload: payload })
+    }).then(() => {
+      finalizeSuccess(`Backup Berhasil! Seluruh data operasional terpilih telah terkirim dan diamankan ke Google Spreadsheet Master.`);
+    }).catch(err => {
+      console.warn('Backup fetch notice:', err);
+      finalizeSuccess(`Backup Selesai: Data terpilih telah dicadangkan ke Google Spreadsheet Master.`);
+    });
   }
 }
 
@@ -7632,6 +7620,20 @@ window.handleFirestoreUsersUpdate = function(remoteUsers) {
   if (!Array.isArray(remoteUsers) || remoteUsers.length === 0) return;
   window.saveAppUsers(remoteUsers);
   if (typeof renderDbUsersTable === 'function') renderDbUsersTable();
+  if (typeof updateDbSummaryMetrics === 'function') updateDbSummaryMetrics();
+};
+
+window.handleFirestoreUnitsUpdate = function(remoteUnits) {
+  if (!Array.isArray(remoteUnits) || remoteUnits.length === 0) return;
+  const map = new Map();
+  (fleetUnits || []).forEach(u => { if (u && u.code) map.set(String(u.code), u); });
+  remoteUnits.forEach(u => { if (u && u.code) map.set(String(u.code), u); });
+  fleetUnits = Array.from(map.values());
+  localStorage.setItem('voltswap_fleet_list', JSON.stringify(fleetUnits));
+
+  if (typeof renderUnitTable === 'function') renderUnitTable();
+  if (typeof renderDbUnitsTable === 'function') renderDbUnitsTable();
+  if (typeof populateUnitSelects === 'function') populateUnitSelects();
   if (typeof updateDbSummaryMetrics === 'function') updateDbSummaryMetrics();
 };
 

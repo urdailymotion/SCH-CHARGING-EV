@@ -16,6 +16,7 @@
   let unsubSwaps = null;
   let unsubProblems = null;
   let unsubSchedules = null;
+  let unsubUnits = null;
 
   // Default Template (Injected from user config)
   const defaultTemplate = {
@@ -186,6 +187,20 @@
         }
       }, (err) => console.warn('Schedules listener notice:', err));
     } catch (e) {}
+
+    // Listener Units
+    try {
+      if (unsubUnits) unsubUnits();
+      unsubUnits = db.collection('units').onSnapshot((snapshot) => {
+        if (!snapshot.empty) {
+          const list = [];
+          snapshot.forEach((doc) => list.push(doc.data()));
+          if (list.length > 0 && window.handleFirestoreUnitsUpdate) {
+            window.handleFirestoreUnitsUpdate(list);
+          }
+        }
+      }, (err) => console.warn('Units listener notice:', err));
+    } catch (e) {}
   }
 
   /**
@@ -314,6 +329,40 @@
     }
   }
 
+  // --- UNITS ---
+  async function addUnit(unit) {
+    if (!db || !isConnected) return false;
+    try {
+      const code = typeof unit === 'string' ? unit : unit.code;
+      const unitObj = typeof unit === 'string' ? {
+        code: unit,
+        type: 'EV Dump Truck 90T',
+        status: 'Aktif',
+        note: 'Operasional Normal'
+      } : unit;
+      const docId = String(code).trim();
+      await db.collection('units').doc(docId).set({
+        ...unitObj,
+        code: docId,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      }, { merge: true });
+      return true;
+    } catch (e) {
+      console.error('Gagal menambahkan unit ke Firestore:', e);
+      return false;
+    }
+  }
+
+  async function deleteUnit(code) {
+    if (!db || !isConnected) return false;
+    try {
+      await db.collection('units').doc(String(code).trim()).delete();
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   /**
    * =========================================================================
    * 1-CLICK CLOUD MIGRATION (SEEDING SELURUH DATA LOKAL KE FIRESTORE)
@@ -418,6 +467,7 @@
     if (unsubSwaps) { unsubSwaps(); unsubSwaps = null; }
     if (unsubProblems) { unsubProblems(); unsubProblems = null; }
     if (unsubSchedules) { unsubSchedules(); unsubSchedules = null; }
+    if (unsubUnits) { unsubUnits(); unsubUnits = null; }
     localStorage.removeItem(STATUS_KEY);
     updateStatusBadge(false, 'Mode Lokal (Offline)');
   }
@@ -439,6 +489,8 @@
     deleteProblem,
     addSchedule,
     deleteSchedule,
+    addUnit,
+    deleteUnit,
     saveUser,
     deleteUser,
     migrateAllLocalData,
