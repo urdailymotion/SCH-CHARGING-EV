@@ -9,7 +9,7 @@ console.log('[1/4] Membaca file-file aplikasi lokal dari:', baseDir);
 let html = fs.readFileSync(path.join(baseDir, 'index.html'), 'utf8');
 let css = fs.readFileSync(path.join(baseDir, 'style.css'), 'utf8');
 let dataJs = fs.readFileSync(path.join(baseDir, 'data.js'), 'utf8');
-let appJs = fs.readFileSync(path.join(baseDir, 'app.js'), 'utf8');
+let appJs = fs.existsSync(path.join(baseDir, 'main.js')) ? fs.readFileSync(path.join(baseDir, 'main.js'), 'utf8') : fs.readFileSync(path.join(baseDir, 'app.js'), 'utf8');
 
 // High-performance lightweight background for fast GAS load & zero timeout
 css = css.replace(/url\(['"]?login_bg\.jpg['"]?\)/g, 'radial-gradient(ellipse at 50% 20%, #1e3a5f 0%, #0c2040 45%, #050e1d 100%)');
@@ -22,7 +22,7 @@ html = html.replace(
 
 // Bersihkan link manifest dan script lokal
 html = html.replace(/<link rel="manifest"[^>]*>/g, '');
-html = html.replace(/<script src="app\.js"[^>]*><\/script>/g, '');
+html = html.replace(/<script src="(main|app)\.js"[^>]*><\/script>/g, '');
 
 // Inline scripts
 const bundleScripts = `
