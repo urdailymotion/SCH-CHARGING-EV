@@ -10,5 +10,5 @@ echo.
 echo Menjalankan Web Server lokal (Port 3000)...
 echo Tekan CTRL+C untuk menutup server jika selesai.
 echo.
-node server.js
+node local_server.js
 pause
