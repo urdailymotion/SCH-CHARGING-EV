@@ -17,14 +17,14 @@
   let unsubProblems = null;
   let unsubSchedules = null;
 
-  // Default Template (Akan diisi oleh Supervisor via UI Database Manager)
+  // Default Template (Injected from user config)
   const defaultTemplate = {
-    apiKey: "",
-    authDomain: "",
-    projectId: "",
-    storageBucket: "",
-    messagingSenderId: "",
-    appId: ""
+    apiKey: "AIzaSyAW7Groj5v8TzbEwXhTXBDc8RT1ehBT4_0",
+    authDomain: "charging-ev-scm.firebaseapp.com",
+    projectId: "charging-ev-scm",
+    storageBucket: "charging-ev-scm.firebasestorage.app",
+    messagingSenderId: "164213188853",
+    appId: "1:164213188853:web:b6bd90e4fb421cde1c3dbc"
   };
 
   /**
@@ -33,11 +33,14 @@
   function getSavedConfig() {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) return JSON.parse(stored);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed && parsed.apiKey && parsed.projectId) return parsed;
+      }
     } catch (e) {
       console.warn('Gagal membaca saved Firebase config:', e);
     }
-    return null;
+    return { ...defaultTemplate };
   }
 
   /**
