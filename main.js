@@ -6919,6 +6919,17 @@ function backupAllDataToGoogleSheets() {
     users: preview.cUsers ? users : []
   };
 
+  // Safety fallback: jika array kosong karena cutoff tanggal terdahulu, gunakan seluruh data lokal
+  if (payload.swaps.length === 0 && Array.isArray(swapsData) && swapsData.length > 0 && preview.cSwaps) {
+    payload.swaps = [...swapsData];
+  }
+  if (payload.problems.length === 0 && Array.isArray(problemsData) && problemsData.length > 0 && preview.cProb) {
+    payload.problems = [...problemsData];
+  }
+  if (payload.schedules.length === 0 && Array.isArray(schedulesData) && schedulesData.length > 0 && preview.cSch) {
+    payload.schedules = [...schedulesData];
+  }
+
   // Cari tanggal terbaru dari data yang dikirim untuk dijadikan cutoff date baru
   let maxTime = 0;
   let maxDateStr = '';
@@ -6998,10 +7009,10 @@ function backupAllDataToGoogleSheets() {
     fetch(GAS_BACKUP_URL, {
       method: 'POST',
       mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify({ action: 'backup', payload: payload })
     }).then(() => {
-      finalizeSuccess(`Backup Berhasil! Seluruh data operasional terpilih telah terkirim dan diamankan ke Google Spreadsheet Master.`);
+      finalizeSuccess(`Backup Berhasil! Seluruh data operasional terpilih telah terkirim dan tersimpan di Google Spreadsheet Master.`);
     }).catch(err => {
       console.warn('Backup fetch notice:', err);
       finalizeSuccess(`Backup Selesai: Data terpilih telah dicadangkan ke Google Spreadsheet Master.`);
