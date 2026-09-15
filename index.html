@@ -1,0 +1,3232 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <script>
+    // Instant Zero-Flicker check before ANY CSS/DOM rendering
+    (function() {
+      try {
+        var isLogged = localStorage.getItem('voltswap_is_logged_in') === 'true';
+        if (!isLogged) {
+          document.documentElement.className += ' needs-login';
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <meta name="theme-color" content="#d32f2f">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="PPA Swap">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="login_bg.jpg">
+  <title>Operation - Charging Swap Transaction | Safe & Strong Operational Performance</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Chart.js for analytics tab loaded with defer so it never blocks mobile layout rendering -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+  <!-- SheetJS for true Excel (.xlsx) import & export -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+
+  <!-- =======================================================================
+       0. DEDICATED SPLIT-CARD LOGIN PORTAL (PPA SAFE & STRONG)
+       Sesuai Desain Mockup Referensi Pengguna
+       ======================================================================= -->
+  <div class="login-portal-overlay" id="loginPortalScreen">
+    <div class="split-login-card">
+      
+      <!-- SISI KIRI: BANNER MINING PPA SAFE & STRONG -->
+      <div class="login-left-banner">
+        <div class="login-banner-overlay"></div>
+
+        <!-- Silhouette Pegunungan di Bagian Atas -->
+        <div class="mountain-vector-top">
+          <svg viewBox="0 0 500 120" preserveAspectRatio="none" style="width: 100%; height: 75px; fill: rgba(148, 163, 184, 0.28);">
+            <polygon points="0,120 70,55 140,90 230,15 310,75 380,35 460,95 500,45 500,120" />
+            <polygon points="0,120 110,65 180,100 250,45 330,85 400,55 470,100 500,70 500,120" style="fill: rgba(15, 23, 42, 0.45);" />
+          </svg>
+        </div>
+
+        <!-- Center Branding: Logo PPA & Safe and Strong -->
+        <div class="login-branding-box">
+          <div class="ppa-main-logo-row">
+            <!-- PPA Red Circle Runner Logo -->
+            <div class="ppa-circle-logo-badge">
+              <svg viewBox="0 0 100 100" class="ppa-runner-svg" style="width: 100%; height: 100%;">
+                <circle cx="50" cy="50" r="46" fill="#d32f2f" stroke="#ffffff" stroke-width="3.5"/>
+                <circle cx="50" cy="30" r="7.5" fill="#ffffff"/>
+                <path d="M50,38 L50,56 L65,72 M50,56 L35,72 M38,46 L62,46" stroke="#ffffff" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+              </svg>
+            </div>
+            <div class="ppa-bold-text">PPA</div>
+          </div>
+
+          <!-- Red Line Accent -->
+          <div class="ppa-red-line-divider"></div>
+
+          <div class="safe-strong-title">
+            SAFE &amp; STR<span class="red-target-o">🎯</span>NG
+          </div>
+          <div class="operational-perf-subtitle">
+            OPERATIONAL PERFORMANCE
+          </div>
+        </div>
+
+        <!-- Bottom Tag -->
+        <div class="login-banner-bottom-tag">
+          <span>⚡ CHARGING &amp; SWAP STATION MANAGEMENT SYSTEM</span>
+        </div>
+      </div>
+
+      <!-- SISI KANAN: FORM LOGIN ENTERPRISE -->
+      <div class="login-right-form">
+        
+        <!-- Icon Security Shield -->
+        <div class="login-shield-badge">
+          <div class="shield-icon-circle">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <rect x="9" y="11" width="6" height="4.5" rx="1" fill="#1d4ed8"/>
+              <path d="M10 11V8.5a2 2 0 1 1 4 0V11"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Header Titles -->
+        <h2 class="login-form-title">Selamat Datang</h2>
+        <p class="login-form-subtitle">Silakan masuk untuk melanjutkan</p>
+
+        <form id="formSplitCardLogin" novalidate>
+          
+          <!-- 1. BARIS 1: MASUKKAN NIK & PILIH TANGGAL (BERDAMPINGAN) -->
+          <div class="login-grid-2col" style="margin-bottom: 0;">
+            <div class="login-input-group" style="margin-bottom: 0;">
+              <label class="login-input-label" for="splitLoginNik">Masukkan NIK</label>
+              <div class="login-input-wrap">
+                <span class="login-input-icon">👤</span>
+                <input type="text" id="splitLoginNik" class="login-text-input" 
+                  placeholder="Ketik NIK" 
+                  maxlength="60" 
+                  autocomplete="off" 
+                  list="splitNikDatalist">
+              </div>
+            </div>
+
+            <div class="login-input-group" style="margin-bottom: 0;">
+              <label class="login-input-label" for="splitLoginDate">Pilih Tanggal</label>
+              <div class="login-input-wrap">
+                <input type="date" id="splitLoginDate" class="login-date-input" required>
+              </div>
+            </div>
+          </div>
+
+          <!-- Auto Detected Operator Name Status -->
+          <div id="splitNikAutoResult" class="nik-auto-indicator" style="margin-top: 8px; margin-bottom: 12px;">
+            <span class="indicator-icon">ℹ️</span>
+            <span class="indicator-text">Ketik 8 digit NIK karyawan Anda</span>
+          </div>
+
+          <datalist id="splitNikDatalist">
+            <option value="81230529">81230529 - ZAKARIYA ABIDIN (Charging Man / Operator)</option>
+            <option value="81230588">81230588 - DAFFA GEDE KURNIAWAN (Charging Man / Operator)</option>
+            <option value="81230176">81230176 - ABI SETIAWAN (Charging Man / Operator)</option>
+            <option value="81230594">81230594 - VIRNANDA AGUS SETIAWAN (Charging Man / Operator)</option>
+            <option value="81230596">81230596 - SRIVASTA NASOKA FARIMBA (Charging Man / Operator)</option>
+            <option value="81230112">81230112 - BACHTIAR PUTRA DANANJAYA (Charging Man / Operator)</option>
+            <option value="81230103">81230103 - APRIL YULIUS PESSIWARISA (Charging Man / Operator)</option>
+            <option value="81230134">81230134 - INDRA ARIVYANTO (Charging Man / Operator)</option>
+            <option value="11050104">11050104 - ANTON WAHYU ANTAT WULAN (Group Leader / Supervisor)</option>
+            <option value="21002786">21002786 - TONI PURWANTO (Group Leader / Supervisor)</option>
+            <option value="22002555">22002555 - YUDA PUGUH WIDODO (Group Leader / Supervisor)</option>
+            <option value="24006305">24006305 - AHMAD ZAENAL MUNTAHA (Group Leader / Supervisor)</option>
+            <option value="25001040">25001040 - MURY AGUNG PRASETYA (Group Leader / Supervisor)</option>
+            <option value="25001710">25001710 - LAURENSIUS APRI PRASETYO CALDAS (Group Leader / Supervisor)</option>
+            <option value="25001776">25001776 - ANDI MUHAMMAD ALFERY (Group Leader / Supervisor)</option>
+            <option value="26002909">26002909 - BAMBY PRASETYO (Group Leader / Supervisor)</option>
+            <option value="81230177">81230177 - SRIYANTO (Admin / Supervisor)</option>
+          </datalist>
+
+          <!-- 3 & 4. PILIH LOKASI & PILIH SHIFT -->
+          <div class="login-grid-2col">
+            <div class="login-input-group" style="margin-bottom: 0;">
+              <label class="login-input-label" for="splitLoginStation">Pilih Lokasi</label>
+              <div class="login-input-wrap">
+                <select id="splitLoginStation" class="login-select-input" required>
+                  <option value="" disabled selected hidden></option>
+                  <option value="ROOM A1">ROOM A1</option>
+                  <option value="ROOM A2">ROOM A2</option>
+                  <option value="SUPERVISOR" id="splitOptStationSpv" style="display: none;">SUPERVISOR</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="login-input-group" style="margin-bottom: 0;">
+              <label class="login-input-label" for="splitLoginShift">Pilih Shift</label>
+              <div class="login-input-wrap">
+                <select id="splitLoginShift" class="login-select-input" required>
+                  <option value="" disabled selected hidden></option>
+                  <option value="1">Shift 1</option>
+                  <option value="2">Shift 2</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5. PILIH KATEGORI CHARGING (CHARGING PILE & CHARGING SWAP) -->
+          <div class="login-input-group" style="margin-bottom: 12px;">
+            <label class="login-input-label" for="splitLoginCategory">Pilih Kategori</label>
+            <div class="login-input-wrap">
+              <select id="splitLoginCategory" class="login-select-input" required>
+                <option value="" disabled selected hidden></option>
+                <option value="CHARGING SWAP">CHARGING SWAP</option>
+                <option value="CHARGING PILE">CHARGING PILE</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Pilihan Mode Operasional: On-Demand vs Schedule -->
+          <div class="login-input-group" style="margin-bottom: 14px;">
+            <div class="login-mode-header-row">
+              <span class="login-input-label" style="margin-bottom: 0;">Mode Sistem Operasional</span>
+              <span id="loginScheduleModeBadge" class="mode-status-badge ondemand">
+                <span class="badge-dot">●</span> ON-DEMAND
+              </span>
+            </div>
+            <div class="segmented-control-box">
+              <input type="radio" name="loginScheduleMode" id="optModeNonSchedule" value="OFF" checked class="segmented-radio">
+              <label for="optModeNonSchedule" id="lblModeNonSchedule" class="segmented-btn active">
+                <span class="seg-icon">⚡</span>
+                <span class="seg-title">On-Demand</span>
+              </label>
+
+              <input type="radio" name="loginScheduleMode" id="optModeSchedule" value="ON" class="segmented-radio">
+              <label for="optModeSchedule" id="lblModeSchedule" class="segmented-btn">
+                <span class="seg-icon">⏱️</span>
+                <span class="seg-title">Mode Schedule</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- 4. MASUKAN PASSWORD -->
+          <div class="login-input-group" style="margin-bottom: 22px;">
+            <label class="login-input-label" for="splitLoginPassword">Masukkan Password</label>
+            <div class="login-input-wrap">
+              <span class="login-input-icon">🔒</span>
+              <input type="password" id="splitLoginPassword" class="login-text-input" 
+                placeholder="Masukkan password" 
+                value="" required autocomplete="current-password">
+              <button type="button" class="btn-toggle-password" id="btnToggleSplitPassword" title="Lihat Sandi">
+                👁️
+              </button>
+            </div>
+          </div>
+
+          <!-- 5. MASUK APLIKASI -->
+          <button type="submit" id="btnSplitLoginSubmit" class="btn-login-submit-blue">
+            Masuk ke Aplikasi
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       1. TOPBAR NAVBAR (RED ENTERPRISE HEADER)
+       ======================================================================= -->
+  <header class="main-header" id="appMainHeader">
+    <div class="header-left">
+      <!-- Hamburger Toggle Button (Di sebelah kiri Safe & Strong) -->
+      <button class="btn-sidebar-toggle" id="btnToggleSidebar" title="Buka / Tutup Sidebar">
+        ☰
+      </button>
+
+      <!-- Brand Logo Container -->
+      <div class="brand-logo-container">
+        <div class="brand-circle-logo">⚡</div>
+        <div class="brand-text-box">
+          <span class="brand-title">SAFE & STRONG</span>
+          <span class="brand-subtitle">OPERATIONAL PERFORMANCE</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Header Right Icons & Profile -->
+    <div class="header-right">
+      <ul class="header-nav-list">
+        <!-- GAS Cloud Sync Status Badge -->
+        <li class="header-nav-item" style="display: flex; align-items: center;">
+          <div id="gasSyncStatusBadge" class="gas-sync-badge" style="display: none;"></div>
+        </li>
+
+        <!-- Notification Bell -->
+        <li class="header-nav-item">
+          <a class="header-nav-link" title="Notifikasi Sistem">
+            <span class="notification-badge-icon">🔔<span class="notification-count">0</span></span>
+          </a>
+        </li>
+
+        <!-- User Profile & Location Badge (Display Only - No Accidental Logout) -->
+        <li class="header-nav-item">
+          <div class="header-nav-link static-user-badge" id="topUserBadgeDisplay" style="cursor: default; user-select: none;">
+            <div class="user-avatar-mini">👤</div>
+            <div class="user-meta-header" style="display: flex; flex-direction: column; text-align: left; line-height: 1.15; margin-right: 4px;">
+              <span class="user-display-name" id="topUserDisplayName">ZAKARIYA ABIDIN</span>
+              <span id="topUserNikRole" style="font-size: 9.5px; opacity: 0.9; font-family: var(--font-mono); letter-spacing: 0.02em;">NIK: 81230529 | OPERATOR</span>
+            </div>
+            <span class="station-badge-top" id="topStationBadge">ROOM A1</span>
+          </div>
+        </li>
+
+      </ul>
+
+    </div>
+  </header>
+
+  <!-- =======================================================================
+       2. APP LAYOUT: SIDEBAR & MAIN CONTENT
+       ======================================================================= -->
+  <div class="app-wrapper">
+
+    <!-- SIDEBAR (LEFT NAVIGATION) -->
+    <aside class="main-sidebar" id="mainSidebar">
+      <div class="sidebar-header-title">MAIN NAVIGATION</div>
+      <ul class="sidebar-menu">
+        <!-- INPUT DATA (PALING ATAS) -->
+        <li class="sidebar-item" id="sidebarItemInputData">
+          <a class="sidebar-link" id="menuInputData">
+            <div class="sidebar-link-content">
+              <span class="sidebar-icon">📝</span>
+              <span>INPUT DATA</span>
+            </div>
+            <span class="sidebar-arrow">›</span>
+          </a>
+        </li>
+
+        <!-- OPERATION (ACTIVE) -->
+        <li class="sidebar-item active open">
+          <a class="sidebar-link" id="menuOperation">
+            <div class="sidebar-link-content">
+              <span class="sidebar-icon">⚡</span>
+              <span>OPERATION</span>
+            </div>
+            <span class="sidebar-arrow">›</span>
+          </a>
+          <ul class="sidebar-treeview" id="sidebarTreeviewOperation">
+            <li>
+              <a class="treeview-link active" id="sublinkSwap" href="javascript:void(0);">
+                <span>⚡</span> <span>Charging Swap Transaction</span>
+              </a>
+            </li>
+            <li>
+              <a class="treeview-link" id="sublinkHistoryDaily" href="javascript:void(0);">
+                <span>📅</span> <span>History Daily</span>
+              </a>
+            </li>
+            <li>
+              <a class="treeview-link" id="sublinkProblem" href="javascript:void(0);">
+                <span>⚠️</span> <span>Problem & Downtime Log</span>
+              </a>
+            </li>
+            <li>
+              <a class="treeview-link" id="sublinkSchedule" href="javascript:void(0);">
+                <span>🎯</span> <span>Swap Schedule &amp; Queue Plan</span>
+              </a>
+            </li>
+            <li>
+              <a class="treeview-link" id="sublinkDashboard" href="javascript:void(0);">
+                <span>📊</span> <span>Visual Analytics & KPI</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+
+        <!-- POPULASI UNIT EV -->
+        <li class="sidebar-item" id="sidebarItemPopulasi">
+          <a class="sidebar-link" id="menuPopulasiUnit">
+            <div class="sidebar-link-content">
+              <span class="sidebar-icon">🚜</span>
+              <span>POPULASI UNIT</span>
+            </div>
+            <span class="sidebar-arrow">›</span>
+          </a>
+        </li>
+
+        <!-- DATABASE MANAGER (KHUSUS SUPERVISOR / LEADER / ADMIN) -->
+        <li class="sidebar-item" id="sidebarItemDatabase" style="display: none;">
+          <a class="sidebar-link" id="menuDatabaseManager">
+            <div class="sidebar-link-content">
+              <span class="sidebar-icon">🗄️</span>
+              <span>DATABASE MANAGER</span>
+            </div>
+            <span class="sidebar-arrow">›</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- User Profile Card & Logout inside Sidebar Drawer (Clean & Elegant on Mobile) -->
+      <div class="sidebar-user-footer">
+        <div class="sidebar-user-card" id="sidebarUserCardClick" style="cursor: default;">
+          <div class="sidebar-user-avatar">👤</div>
+          <div class="sidebar-user-info">
+            <div class="sidebar-user-name" id="sidebarUserName">ZAKARIYA ABIDIN</div>
+            <div class="sidebar-user-sub" id="sidebarUserNikRole">NIK: 81230529 • OPERATOR</div>
+          </div>
+          <span class="sidebar-station-pill" id="sidebarStationPill">ROOM A1</span>
+        </div>
+        <button type="button" class="btn-sidebar-logout-card" id="btnSidebarLogout" title="Keluar dari Aplikasi">
+          <span>🚪 Keluar Sistem</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- MOBILE SIDEBAR BACKDROP OVERLAY -->
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <!-- CONTENT WRAPPER -->
+    <main class="content-wrapper">
+
+      <!-- ===================================================================
+           VIEW 0: INPUT DATA (DEDICATED COMPACT FORM VIEW)
+           =================================================================== -->
+      <div id="viewInputData" style="display: none;">
+
+
+        <div class="panel-card compact-logsheet-panel">
+          <div class="panel-body compact-form-body">
+            <!-- Hidden input for Location (locked to session) so JS always gets dedSwapLoc.value -->
+            <input type="hidden" id="dedSwapLoc" value="ROOM A1">
+
+            <form id="formDedicatedInputSwap">
+              <div class="compact-logsheet-grid">
+                
+                <!-- Row 1: Data Terkunci Sesi Login (Tanggal, Shift, Kategori Sejajar 3 Kolom) -->
+                <div class="form-full-width locked-session-row">
+                  <div class="form-group-ent">
+                    <label class="form-label-ent" style="display: flex; justify-content: space-between; align-items: center;">
+                      <span>Tanggal Operasional</span>
+                      <span class="locked-session-badge" style="font-size: 9.5px; color: #15803d; background: #dcfce7; padding: 1px 5px; border-radius: 4px; font-weight: 700; white-space: nowrap;">🔒<span class="badge-lbl-detail"> Sesi Login</span></span>
+                    </label>
+                    <input type="date" id="dedSwapDate" class="form-control-ent" readonly style="background: #f8fafc; font-weight: 700; color: #0f172a; cursor: not-allowed;" required>
+                  </div>
+
+                  <div class="form-group-ent">
+                    <label class="form-label-ent" style="display: flex; justify-content: space-between; align-items: center;">
+                      <span>Shift Kerja</span>
+                      <span class="locked-session-badge" style="font-size: 9.5px; color: #15803d; background: #dcfce7; padding: 1px 5px; border-radius: 4px; font-weight: 700; white-space: nowrap;">🔒<span class="badge-lbl-detail"> Sesi Login</span></span>
+                    </label>
+                    <input type="text" id="dedSwapShiftDisplay" class="form-control-ent" readonly style="background: #f8fafc; font-weight: 700; color: #0f172a; cursor: not-allowed; text-align: center;" value="Shift 1">
+                    <input type="hidden" id="dedSwapShift" value="1">
+                  </div>
+
+                  <div class="form-group-ent">
+                    <label class="form-label-ent" style="display: flex; justify-content: space-between; align-items: center;">
+                      <span>Kategori Charging</span>
+                      <span class="locked-session-badge" style="font-size: 9.5px; color: #15803d; background: #dcfce7; padding: 1px 5px; border-radius: 4px; font-weight: 700; white-space: nowrap;">🔒<span class="badge-lbl-detail"> Sesi Login</span></span>
+                    </label>
+                    <input type="text" id="dedSwapCategoryDisplay" class="form-control-ent" readonly style="background: #f8fafc; font-weight: 700; color: #0b5394; cursor: not-allowed; text-transform: uppercase; text-align: center;" value="CHARGING SWAP">
+                    <input type="hidden" id="dedSwapCategory" value="CHARGING SWAP">
+                  </div>
+                </div>
+
+                <!-- Row 2: Kode Unit Armada (Searchable Dropdown & Search Engine) -->
+                <div class="form-group-ent form-full-width">
+                  <label class="form-label-ent">
+                    <span>Kode Unit Armada</span>
+                  </label>
+                  <div class="searchable-unit-combobox" id="unitComboboxWrap" style="position: relative; width: 100%;">
+                    <div style="position: relative; display: flex; align-items: center;">
+                      <span style="position: absolute; left: 12px; font-size: 15px; color: #64748b; pointer-events: none; z-index: 2;">🚛</span>
+                      <input type="text" id="dedSwapUnit" class="form-control-ent select-unit-prominent" 
+                        placeholder="Ketik untuk mencari unit (cth: 1601, 01)..." 
+                        autocomplete="off" 
+                        style="padding-left: 38px !important; padding-right: 32px !important; font-weight: 700; color: #0f172a; cursor: text;" 
+                        required>
+                      <button type="button" id="btnToggleUnitDropdown" title="Buka Daftar Unit" style="position: absolute; right: 8px; background: none; border: none; font-size: 12px; color: #64748b; cursor: pointer; padding: 6px 8px; z-index: 2;">
+                        ▼
+                      </button>
+                    </div>
+                    <div id="unitDropdownList" class="unit-dropdown-menu" style="display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0; max-height: 240px; overflow-y: auto; background: #ffffff; border: 1.5px solid #cbd5e1; border-radius: 9px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); z-index: 1050; padding: 4px 0;">
+                      <!-- Populated dynamically and filtered live as user types -->
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Row 3: HM Unit & Konsumsi Energi (2 Kolom Kompak) -->
+                <div class="form-group-ent">
+                  <label class="form-label-ent">Hour Meter (HM)</label>
+                  <input type="number" id="dedSwapHM" class="form-control-ent" placeholder="" step="1">
+                </div>
+
+                <div class="form-group-ent">
+                  <label class="form-label-ent">Energi (kWh)</label>
+                  <input type="number" id="dedSwapEnergy" class="form-control-ent" placeholder="" step="0.1" required>
+                </div>
+
+                <!-- Row 4: Jam Masuk, Jam Keluar & Charging Time (Terintegrasi) -->
+                <div class="time-charging-group">
+                  <div class="form-group-ent">
+                    <label class="form-label-ent">Jam Masuk (In)</label>
+                    <div class="time-input-wrap">
+                      <input type="text" id="dedSwapJamIn" class="form-control-ent time-touch-field" readonly placeholder="--:--" required onclick="openTimePickerModal('dedSwapJamIn', 'Jam Masuk (In)')" title="Sentuh untuk memilih jam (Scroll Digital / Jam Analog)">
+                      <button type="button" class="btn-now-compact" onclick="setNowField('dedSwapJamIn')" title="Set Waktu Sekarang">Now</button>
+                    </div>
+                  </div>
+
+                  <div class="form-group-ent">
+                    <label class="form-label-ent">Jam Keluar (Out)</label>
+                    <div class="time-input-wrap">
+                      <input type="text" id="dedSwapJamOut" class="form-control-ent time-touch-field" readonly placeholder="--:--" required onclick="openTimePickerModal('dedSwapJamOut', 'Jam Keluar (Out)')" title="Sentuh untuk memilih jam (Scroll Digital / Jam Analog)">
+                      <button type="button" class="btn-now-compact" onclick="setNowField('dedSwapJamOut')" title="Set Waktu Sekarang">Now</button>
+                    </div>
+                  </div>
+
+                  <div class="form-group-ent charging-time-col">
+                    <label class="form-label-ent" style="display: flex; justify-content: space-between; align-items: center;">
+                      <span>Charging Time</span>
+                      <span style="font-size: 9.5px; color: #0284c7; background: #e0f2fe; padding: 1px 5px; border-radius: 4px; font-weight: 700;">⏱️ Out - In</span>
+                    </label>
+                    <input type="text" id="dedSwapChargingTime" class="form-control-ent" readonly value="-- Menit" title="Dihitung otomatis: Jam Keluar dikurangi Jam Masuk">
+                    <input type="hidden" id="dedSwapDurationMin" value="0">
+                  </div>
+                </div>
+
+                <!-- Row 5: SOC Masuk & SOC Keluar (2 Kolom Kompak) -->
+                <div class="form-group-ent">
+                  <label class="form-label-ent">Baterai Masuk (SOC In)</label>
+                  <input type="text" id="dedSwapBatIn" class="form-control-ent" placeholder="" required autocomplete="off">
+                </div>
+
+                <div class="form-group-ent">
+                  <label class="form-label-ent">Baterai Keluar (SOC Out)</label>
+                  <input type="text" id="dedSwapBatOut" class="form-control-ent" placeholder="" required autocomplete="off">
+                </div>
+
+                <!-- Row 6: Status Ketepatan (Remark) & Problem Remark (2 Kolom Kompak) -->
+                <div class="form-group-ent">
+                  <label class="form-label-ent">Status / Remark Ketepatan</label>
+                  <select id="dedSwapStatus" class="form-control-ent">
+                    <option value="On Time" selected>On Time</option>
+                    <option value="Out Off Time">Out Off Time</option>
+                  </select>
+                  <input type="hidden" id="dedSwapTimeSch" value="-">
+                </div>
+
+                <div class="form-group-ent">
+                  <label class="form-label-ent">Problem Remark</label>
+                  <select id="dedSwapRemark2" class="form-control-ent">
+                    <option value="13.NO PROBLEM" selected>13.NO PROBLEM</option>
+                    <option value="">- Kosong (Ketik di Keterangan) -</option>
+                    <option value="15.BATTERY LOW POWER">15.BATTERY LOW POWER</option>
+                    <option value="16.CHARGER ISSUE">16.CHARGER ISSUE</option>
+                    <option value="17.CRANE OHC DELAY">17.CRANE OHC DELAY</option>
+                    <option value="18.COAL SPILL OVER BATTERY">18.COAL SPILL OVER BATTERY</option>
+                  </select>
+                </div>
+
+                <!-- Row 7: Kolom Input Keterangan (Full Width) -->
+                <div class="form-group-ent form-full-width" id="wrapDedSwapKeterangan">
+                  <label class="form-label-ent" style="display: flex; justify-content: space-between; align-items: center;">
+                    <span>Keterangan</span>
+                    <span id="badgeKeteranganStatus" style="font-size: 10px; padding: 1px 6px; border-radius: 4px; font-weight: 700; background: #e2e8f0; color: #475569;">ℹ️ Opsional (On Time)</span>
+                  </label>
+                  <input type="text" id="dedSwapKeterangan" class="form-control-ent" placeholder="Catatan / keterangan operasional (opsional jika On Time)..." autocomplete="off">
+                </div>
+
+                <!-- Row 8: Tombol Simpan Transaksi (Full Width) -->
+                <div class="form-submit-full form-full-width">
+                  <button type="submit" class="btn-submit-green" id="btnSubmitDedSwap">
+                    <span>💾</span> Simpan Transaksi Swap
+                  </button>
+                </div>
+
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================================================
+           VIEW 1: CHARGING SWAP TRANSACTION (DEFAULT VIEW)
+           =================================================================== -->
+      <div id="viewSwapTransaction">
+        <!-- Page Title & Breadcrumbs -->
+        <div class="content-breadcrumb-header">
+          <div class="page-title-box">
+            <h1>Operation</h1>
+            <small id="subPageTitle">Refueling & Charging Transaction</small>
+          </div>
+          <ul class="breadcrumb-list">
+            <li><a href="#">🏠 Home</a></li>
+            <li class="breadcrumb-separator">></li>
+            <li><a href="#">Operation</a></li>
+            <li class="breadcrumb-separator">></li>
+            <li style="color: #333;">Charging Transaction</li>
+          </ul>
+        </div>
+
+        <!-- CARD 1: SEARCHING FORM -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <div class="panel-title">Searching Form</div>
+          </div>
+          <div class="panel-body">
+            <div class="search-form-row">
+              <div class="search-field-item">
+                <label class="search-field-label">Start</label>
+                <input type="date" id="filterStartDate" class="input-date-box">
+              </div>
+
+              <div class="search-field-item">
+                <label class="search-field-label">End</label>
+                <input type="date" id="filterEndDate" class="input-date-box">
+              </div>
+
+              <div class="search-field-item">
+                <label class="search-field-label">Shift</label>
+                <select id="filterShiftSelect" class="input-select-box" style="min-width: 90px;">
+                  <option value="ALL">All</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                </select>
+              </div>
+
+              <div class="search-field-item">
+                <label class="search-field-label">Location</label>
+                <select id="filterLocationSelect" class="input-select-box" style="min-width: 110px;">
+                  <option value="ALL">All</option>
+                  <option value="ROOM A1">ROOM A1</option>
+                  <option value="ROOM A2">ROOM A2</option>
+                </select>
+              </div>
+
+              <div style="display: flex; gap: 6px; align-items: flex-end;">
+                <button class="btn-show" id="btnApplySearchFilter">Show</button>
+                <button type="button" class="btn-show" id="btnResetSearchFilter" style="background: #6c757d; border-color: #6c757d;" title="Reset Filter">Reset</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 2: REFUELING & CHARGING TRANSACTION (MAIN DATA TABLE) -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <div class="panel-title">Charging Swap Transaction</div>
+          </div>
+          <div class="panel-body">
+            <!-- Action Buttons Bar -->
+            <div class="table-action-bar">
+              <div class="table-buttons-left">
+                <button class="btn-export-green" id="btnExportData">
+                  <span>📥</span> Export Data
+                </button>
+                <button class="btn-export-cyan" id="btnExportIPCU">
+                  <span>📊</span> Export IPCC
+                </button>
+                <button class="btn-add-entry" id="btnOpenAddSwapModal">
+                  <span>➕</span> + Input Transaksi Swap
+                </button>
+              </div>
+            </div>
+
+            <!-- Table Filter Row (Show entries + Search input) -->
+            <div class="table-filter-bar">
+              <div>
+                Show 
+                <select id="selectEntriesPerPage" class="entries-select">
+                  <option value="10">10</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                </select> 
+                entries
+              </div>
+              <div>
+                Search: <input type="text" id="inputTableSearch" class="search-table-input" placeholder="Ketik unit / id...">
+              </div>
+            </div>
+
+            <!-- Mobile View Mode Toggle (Cards vs Table) -->
+            <div class="table-view-toggle-bar">
+              <div class="view-toggle-pills">
+                <button type="button" class="btn-toggle-pill active" id="btnToggleMobileCards">
+                  <span>📱</span> Mode Kartu
+                </button>
+                <button type="button" class="btn-toggle-pill" id="btnToggleMobileTable">
+                  <span>📊</span> Mode Tabel
+                </button>
+              </div>
+            </div>
+
+            <!-- Mobile Cards Container (Tampilan Kartu Elegan di HP) -->
+            <div class="mobile-cards-grid" id="mobileCardsContainer"></div>
+
+            <!-- Responsive Table Container -->
+            <div class="table-responsive-box" id="tableResponsiveBox">
+              <table class="enterprise-data-table" id="mainDataTable">
+                <thead>
+                  <tr>
+                    <th style="text-align: center;">Manpower <span class="sort-icon">⇅</span></th>
+                    <th style="text-align: center;">Transaction ID <span class="sort-icon">⇅</span></th>
+                    <th style="text-align: center;">Category <span class="sort-icon">⇅</span></th>
+                    <th style="text-align: center;">Unit <span class="sort-icon">⇅</span></th>
+                    <th style="text-align: center;">Date <span class="sort-icon">⇅</span></th>
+                    <th style="text-align: center;">Shift <span class="sort-icon">⇅</span></th>
+                    <th style="text-align: center;">Time In <span class="sort-icon">⇅</span></th>
+                    <th style="text-align: center;">Time Out <span class="sort-icon">⇅</span></th>
+                    <th style="text-align: center;">Dur (m) <span class="sort-icon">⇅</span></th>
+                    <th style="text-align: center;">Energy (kWh) <span class="sort-icon">⇅</span></th>
+                    <th style="text-align: center;">HM <span class="sort-icon">⇅</span></th>
+                    <th style="text-align: center;">Bat In <span class="sort-icon">⇅</span></th>
+                    <th style="text-align: center;">Bat Out <span class="sort-icon">⇅</span></th>
+                    <th style="text-align: center;">Loc <span class="sort-icon">⇅</span></th>
+                    <th style="text-align: center;">Status <span class="sort-icon">⇅</span></th>
+                    <th style="text-align: center;">Remark <span class="sort-icon">⇅</span></th>
+                    <th style="text-align: center;">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="mainTableBody">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Table Footer: Pagination & Records Info -->
+            <div class="table-footer-pagination">
+              <div id="tableRecordInfo">Showing 1 to 10 of 173 entries</div>
+              <div class="pagination-nav" id="paginationContainer">
+                <!-- Rendered dynamically -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 3: DISTRIBUTED FUEL / ENERGY SUMMARY TABLE -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <div class="panel-title">Distributed Energy & Summary Lokasi</div>
+          </div>
+          <div class="panel-body">
+            <div class="distributed-summary-container">
+              <table class="distributed-summary-table">
+                <thead>
+                  <tr>
+                    <th>Location / Room</th>
+                    <th>Total Swap</th>
+                    <th>Total Energy (kWh)</th>
+                    <th>On-Time Performance</th>
+                  </tr>
+                </thead>
+                <tbody id="summaryTableBody">
+                  <tr>
+                    <td><strong>ROOM A1</strong></td>
+                    <td id="sumA1Count">71</td>
+                    <td id="sumA1Energy">21,880.0</td>
+                    <td><span class="status-tag ontime">97.2%</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>ROOM A2</strong></td>
+                    <td id="sumA2Count">102</td>
+                    <td id="sumA2Energy">31,425.0</td>
+                    <td><span class="status-tag ontime">100.0%</span></td>
+                  </tr>
+                  <tr style="background: #f2f5f8; font-weight: 700;">
+                    <td><strong>TOTAL OPERASIONAL</strong></td>
+                    <td id="sumTotalCount">173</td>
+                    <td id="sumTotalEnergy">53,305.0</td>
+                    <td><span class="status-tag ontime">98.8%</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================================================
+           VIEW 1.5: HISTORY DAILY (REKAP FREKUENSI SWAP ARMADA HARIAN)
+           =================================================================== -->
+      <div id="viewHistoryDaily" style="display: none;">
+        <div class="content-breadcrumb-header">
+          <div class="page-title-box">
+            <h1>Operation</h1>
+            <small>Daily Fleet Swap History & Utilization Summary</small>
+          </div>
+          <ul class="breadcrumb-list">
+            <li><a href="#">🏠 Home</a></li>
+            <li class="breadcrumb-separator">></li>
+            <li><a href="#">Operation</a></li>
+            <li class="breadcrumb-separator">></li>
+            <li style="color: #333;">History Daily</li>
+          </ul>
+        </div>
+
+        <!-- SEARCH & FILTER FORM -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <div class="panel-title">Filter Harian & Utilisasi Armada</div>
+          </div>
+          <div class="panel-body">
+            <div class="search-form-row">
+              <div class="search-field-item">
+                <label class="search-field-label">Pilih Tanggal</label>
+                <select id="dailyFilterDate" class="input-select-box" style="min-width: 140px; font-weight: 700; color: #0b5394;">
+                  <option value="11/09/2026">11 Sept 2026</option>
+                  <option value="10/09/2026">10 Sept 2026</option>
+                  <option value="09/09/2026">9 Sept 2026</option>
+                  <option value="ALL">Semua Tanggal</option>
+                </select>
+              </div>
+
+              <div class="search-field-item">
+                <label class="search-field-label">Shift</label>
+                <select id="dailyFilterShift" class="input-select-box" style="min-width: 90px;">
+                  <option value="ALL">Semua Shift</option>
+                  <option value="1">Shift 1</option>
+                  <option value="2">Shift 2</option>
+                </select>
+              </div>
+
+              <div class="search-field-item">
+                <label class="search-field-label">Lokasi</label>
+                <select id="dailyFilterLoc" class="input-select-box" style="min-width: 110px;">
+                  <option value="ALL">Semua Ruangan</option>
+                  <option value="ROOM A1">ROOM A1</option>
+                  <option value="ROOM A2">ROOM A2</option>
+                </select>
+              </div>
+
+              <div class="search-field-item">
+                <label class="search-field-label">Frekuensi Swap</label>
+                <select id="dailyFilterFreq" class="input-select-box" style="min-width: 130px;">
+                  <option value="ALL">Semua Frekuensi</option>
+                  <option value="3+">3x Swap atau Lebih (Tinggi)</option>
+                  <option value="2">2x Swap (Optimal)</option>
+                  <option value="1">1x Swap (Standar)</option>
+                </select>
+              </div>
+
+              <button class="btn-show" id="btnApplyDailyFilter">Filter Data</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- MINI SUMMARY STAT CHIPS (4 CARDS) -->
+        <div class="daily-stat-chips-grid">
+          <div class="daily-stat-chip">
+            <div class="daily-chip-icon" style="background: rgba(11, 83, 148, 0.12); color: #0b5394;">🚚</div>
+            <div class="daily-chip-info">
+              <span class="daily-chip-label">Unit Beroperasi</span>
+              <strong class="daily-chip-val" id="dailyStatActiveUnits">0 Unit</strong>
+            </div>
+          </div>
+
+          <div class="daily-stat-chip">
+            <div class="daily-chip-icon" style="background: rgba(0, 166, 90, 0.12); color: #00a65a;">🔄</div>
+            <div class="daily-chip-info">
+              <span class="daily-chip-label">Total Swap Harian</span>
+              <strong class="daily-chip-val" id="dailyStatTotalSwaps">0 Kali</strong>
+            </div>
+          </div>
+
+          <div class="daily-stat-chip">
+            <div class="daily-chip-icon" style="background: rgba(243, 156, 18, 0.12); color: #f39c12;">⚡</div>
+            <div class="daily-chip-info">
+              <span class="daily-chip-label">Konsumsi Energi</span>
+              <strong class="daily-chip-val" id="dailyStatTotalEnergy">0 kWh</strong>
+            </div>
+          </div>
+
+          <div class="daily-stat-chip">
+            <div class="daily-chip-icon" style="background: rgba(221, 75, 57, 0.12); color: #dd4b39;">🏆</div>
+            <div class="daily-chip-info">
+              <span class="daily-chip-label">Unit Paling Aktif</span>
+              <strong class="daily-chip-val" id="dailyStatTopUnit">-</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- MAIN DAILY HISTORY PANEL CARD -->
+        <div class="panel-card">
+          <div class="panel-header" style="flex-wrap: wrap; gap: 10px;">
+            <div class="panel-title">Rekapitulasi Swap & Frekuensi per Armada (<span id="dailyDateTitleBadge" style="color: #0b5394; font-weight: 700;">11 Sept 2026</span>)</div>
+            <div style="display: flex; gap: 6px;">
+              <button class="btn-export-green" id="btnExportDailyExcel">
+                <span>📊</span> Export Excel
+              </button>
+            </div>
+          </div>
+
+          <div class="panel-body">
+            <!-- Filter & Search Bar -->
+            <div class="table-filter-bar">
+              <div>
+                Show 
+                <select id="dailyEntriesSelect" class="entries-select">
+                  <option value="10">10</option>
+                  <option value="25" selected>25</option>
+                  <option value="50">50</option>
+                </select> 
+                entries per page
+              </div>
+              <div>
+                <input type="text" id="dailySearchInput" placeholder="Cari Kode Unit DT..." style="border: 1px solid #d2d6de; border-radius: 2px; padding: 4px 8px; font-size: 12px; width: 180px;">
+              </div>
+            </div>
+
+            <!-- TABLE REKAP UNIT -->
+            <div class="table-responsive-box" style="width: 100%; margin-bottom: 12px;">
+              <table class="enterprise-data-table" id="tableHistoryDaily" style="width: 100%; table-layout: auto;">
+                <thead>
+                  <tr>
+                    <th style="width: 45px; text-align: center;">No</th>
+                    <th style="width: 125px;">Kode Unit EV</th>
+                    <th style="width: 135px; text-align: center;">Frekuensi Swap</th>
+                    <th style="width: 140px; text-align: right;">Total Energi (kWh)</th>
+                    <th style="width: 120px; text-align: center;">Total Durasi</th>
+                    <th style="min-width: 250px;">Timeline Jam Swap (Shift & Ruangan)</th>
+                    <th style="width: 110px; text-align: center;">Rincian</th>
+                  </tr>
+                </thead>
+                <tbody id="dailyTableBody">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Pagination Bar -->
+            <div class="table-footer-pagination">
+              <div id="dailyRecordInfo">Showing 1 to 25 of 48 entries</div>
+              <div class="pagination-nav" id="dailyPaginationContainer"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================================================
+           VIEW 2: PROBLEM & DOWNTIME LOG (ALTERNATIF VIEW)
+           =================================================================== -->
+      <div id="viewProblemLog" style="display: none;">
+        <div class="content-breadcrumb-header">
+          <div class="page-title-box">
+            <h1>Operation</h1>
+            <small>Problem & Downtime Incident Log</small>
+          </div>
+          <ul class="breadcrumb-list">
+            <li><a href="#">🏠 Home</a></li>
+            <li class="breadcrumb-separator">></li>
+            <li><a href="#">Operation</a></li>
+            <li class="breadcrumb-separator">></li>
+            <li style="color: #333;">Problem Log</li>
+          </ul>
+        </div>
+
+        <div class="panel-card">
+          <div class="panel-header">
+            <div class="panel-title" id="probPanelTitle">Problem & Downtime Incident Log (90 Catatan Google Sheet)</div>
+            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+              <button type="button" class="btn-export-green" id="btnExportProblemExcel" title="Export seluruh catatan gangguan ke format Excel / CSV">
+                <span>📊</span> Export Excel
+              </button>
+              <button type="button" class="btn-add-entry" id="btnOpenAddProblemModal" style="background: var(--btn-red); border-color: #c23321;">
+                <span>🚨</span> + Lapor Gangguan Baru
+              </button>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="table-filter-bar">
+              <div>
+                Show 
+                <select id="selectProbPerPage" class="entries-select">
+                  <option value="10" selected>10</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                </select> entries
+              </div>
+              <div style="display: flex; gap: 6px; align-items: center;">
+                Search Problem: <input type="text" id="inputProbSearch" class="search-table-input" placeholder="Cari masalah, unit, tanggal...">
+              </div>
+            </div>
+
+            <!-- Mobile View Mode Toggle (Cards vs Table) -->
+            <div class="table-view-toggle-bar">
+              <div class="view-toggle-pills">
+                <button type="button" class="btn-toggle-pill active" id="btnToggleProbCards">
+                  <span>📱</span> Mode Kartu
+                </button>
+                <button type="button" class="btn-toggle-pill" id="btnToggleProbTable">
+                  <span>📊</span> Mode Tabel
+                </button>
+              </div>
+            </div>
+
+            <!-- Mobile Cards Container (Tampilan Kartu Elegan di HP) -->
+            <div class="mobile-cards-grid" id="probMobileCardsContainer"></div>
+
+            <div class="table-responsive-box" id="tableResponsiveBoxProb">
+              <table class="enterprise-data-table" id="mainProblemTable">
+                <thead>
+                  <tr>
+                    <th style="cursor: pointer; user-select: none;" data-sort="no" title="Urutkan No">No <span class="sort-icon" id="sortIconProbNo">⇅</span></th>
+                    <th style="cursor: pointer; user-select: none;" data-sort="date" title="Urutkan Tanggal">Date <span class="sort-icon" id="sortIconProbDate">⇅</span></th>
+                    <th style="cursor: pointer; user-select: none; text-align: center;" data-sort="shift" title="Urutkan Shift">Shift <span class="sort-icon" id="sortIconProbShift">⇅</span></th>
+                    <th style="cursor: pointer; user-select: none;" data-sort="unit" title="Urutkan Unit / Fasilitas">Unit / Fasilitas <span class="sort-icon" id="sortIconProbUnit">⇅</span></th>
+                    <th style="cursor: pointer; user-select: none;" data-sort="problem" title="Urutkan Deskripsi Masalah">Problem Description <span class="sort-icon" id="sortIconProbDesc">⇅</span></th>
+                    <th style="cursor: pointer; user-select: none; font-family: var(--font-mono);" data-sort="timeOpen" title="Urutkan Jam Mulai">Time Open <span class="sort-icon" id="sortIconProbOpen">⇅</span></th>
+                    <th style="cursor: pointer; user-select: none; font-family: var(--font-mono);" data-sort="timeClose" title="Urutkan Jam Selesai">Time Close <span class="sort-icon" id="sortIconProbClose">⇅</span></th>
+                    <th style="cursor: pointer; user-select: none;" data-sort="duration" title="Urutkan Durasi">Duration <span class="sort-icon" id="sortIconProbDur">⇅</span></th>
+                    <th style="text-align: center; width: 85px;">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="problemTableBody">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
+            </div>
+
+            <div class="table-footer-pagination">
+              <div id="probRecordInfo">Showing 1 to 10 of 90 entries</div>
+              <div class="pagination-nav" id="probPaginationContainer"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================================================
+           VIEW 2B: SWAP SCHEDULE & QUEUE PLAN (DATA DARI GOOGLE SHEET SCEDHULE)
+           =================================================================== -->
+      <div id="viewSwapSchedule" style="display: none;">
+        <div class="content-breadcrumb-header">
+          <div class="page-title-box">
+            <h1>Operation</h1>
+            <small>Swap Schedule &amp; Queue Planning</small>
+          </div>
+          <ul class="breadcrumb-list">
+            <li><a href="#">🏠 Home</a></li>
+            <li class="breadcrumb-separator">></li>
+            <li><a href="#">Operation</a></li>
+            <li class="breadcrumb-separator">></li>
+            <li style="color: #333;">Swap Schedule</li>
+          </ul>
+        </div>
+
+        <!-- Schedule Metrics Highlights -->
+        <div class="quick-summary-grid">
+          <div class="summary-metric-card sch-total">
+            <div class="sch-card-top-row">
+              <span class="sch-card-label">Total Terjadwal</span>
+              <div class="sch-card-icon">📋</div>
+            </div>
+            <div class="sch-card-val" id="metricTotalSchedule">100 Unit</div>
+            <div class="sch-card-sub" id="metricTotalSub">
+              <span class="sch-sub-bullet">●</span>
+              <span>Basis Google Sheet</span>
+            </div>
+          </div>
+
+          <div class="summary-metric-card sch-shift1">
+            <div class="sch-card-top-row">
+              <span class="sch-card-label">Jadwal Shift 1 (Siang)</span>
+              <div class="sch-card-icon">☀️</div>
+            </div>
+            <div class="sch-card-val" id="metricShift1Schedule">50 Unit</div>
+            <div class="sch-card-sub" id="metricShift1Sub">
+              <span class="sch-sub-bullet">●</span>
+              <span>Target 07:00 - 18:00</span>
+            </div>
+          </div>
+
+          <div class="summary-metric-card sch-shift2">
+            <div class="sch-card-top-row">
+              <span class="sch-card-label">Jadwal Shift 2 (Malam)</span>
+              <div class="sch-card-icon">🌙</div>
+            </div>
+            <div class="sch-card-val" id="metricShift2Schedule">50 Unit</div>
+            <div class="sch-card-sub" id="metricShift2Sub">
+              <span class="sch-sub-bullet">●</span>
+              <span>Target 19:00 - 06:00</span>
+            </div>
+          </div>
+
+          <div class="summary-metric-card sch-mode" id="cardScheduleModeToggle" title="Klik untuk beralih mode operasional" style="cursor: pointer;">
+            <div class="sch-card-top-row">
+              <span class="sch-card-label">Status Mode Sistem</span>
+              <div class="sch-card-icon" id="metricModeIcon">⚡</div>
+            </div>
+            <div class="sch-card-val" id="metricActiveScheduleMode">⚡ ON-DEMAND</div>
+            <div class="sch-card-sub" id="metricModeSub">
+              <span class="sch-sub-bullet">●</span>
+              <span>Klik di sini untuk ubah mode</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-card">
+          <div class="panel-header">
+            <div class="panel-title" id="schedulePanelTitle">Daftar Rencana Jadwal Swap Unit DT EV (100 Data Terdaftar)</div>
+            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+              <button type="button" class="btn-show" id="btnDownloadScheduleTemplate" style="background: #ffffff; border: 1px solid #cbd5e1; color: #334155; display: inline-flex; align-items: center; gap: 6px; font-weight: 600;" title="Unduh format template Excel untuk pengisian jadwal">
+                <span>📥</span> Template Excel
+              </button>
+              <button type="button" class="btn-show" id="btnUploadScheduleExcel" style="background: #0284c7; border: 1px solid #0369a1; color: #ffffff; display: inline-flex; align-items: center; gap: 6px; font-weight: 600;" title="Upload berkas Excel (.xlsx / .xls / .csv) untuk jadwal otomatis">
+                <span>📂</span> Upload File Jadwal
+              </button>
+              <button type="button" class="btn-export-green" id="btnExportScheduleExcel" title="Export seluruh jadwal ke format Microsoft Excel (.xlsx)">
+                <span>📊</span> Export Excel
+              </button>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="table-filter-bar">
+              <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                <div>
+                  Show 
+                  <select id="selectSchedulePerPage" class="entries-select">
+                    <option value="15" selected>15</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                  </select> entries
+                </div>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  Filter Shift:
+                  <select id="filterScheduleShift" class="entries-select" style="width: 130px;">
+                    <option value="ALL">Semua Shift</option>
+                    <option value="1">Shift 1 (Siang)</option>
+                    <option value="2">Shift 2 (Malam)</option>
+                  </select>
+                </div>
+              </div>
+              <div style="display: flex; gap: 6px; align-items: center;">
+                Search: <input type="text" id="inputScheduleSearch" class="search-table-input" placeholder="Cari unit DT EV, jam...">
+              </div>
+            </div>
+
+            <div class="table-responsive-box">
+              <table class="enterprise-data-table" id="mainScheduleTable">
+                <thead>
+                  <tr>
+                    <th style="width: 50px; text-align: center;">No</th>
+                    <th style="width: 120px;">Tanggal</th>
+                    <th style="width: 90px; text-align: center;">Shift</th>
+                    <th style="width: 140px;">Unit DT EV</th>
+                    <th style="width: 140px; font-family: var(--font-mono);">Target Jam (Time Sch)</th>
+                    <th>Status Realisasi</th>
+                    <th style="text-align: center; width: 140px;">Aksi Cepat</th>
+                  </tr>
+                </thead>
+                <tbody id="scheduleTableBody">
+                  <!-- Dynamically populated -->
+                </tbody>
+              </table>
+            </div>
+
+            <div class="table-footer-pagination">
+              <div id="scheduleRecordInfo">Showing 1 to 15 of 100 entries</div>
+              <div class="pagination-nav" id="schedulePaginationContainer"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================================================
+           VIEW 3: VISUAL ANALYTICS & KPI DASHBOARD (PPA EXECUTIVE REPLICA)
+           =================================================================== -->
+      <div id="viewAnalyticsDashboard" style="display: none;">
+        
+        <!-- PPA EXECUTIVE DASHBOARD WRAPPER -->
+        <div class="ppa-dashboard-wrapper">
+          
+          <!-- Banner Title with Red/Black Ribbons -->
+          <div class="ppa-banner-title-box">
+            <div class="ppa-decor-bar-left">
+              <div class="d-red"></div>
+              <div class="d-black"></div>
+            </div>
+            <h2 class="ppa-dashboard-main-title">DASHBOARD MONITORING KETEPATAN SCH SWAB</h2>
+            <div class="ppa-decor-bar-right">
+              <div class="d-black"></div>
+              <div class="d-red"></div>
+            </div>
+          </div>
+
+          <!-- White Filter Bar (Date, Week, Shift, Lokasi, ID Unit, Status, Problem) -->
+          <div class="ppa-filters-row">
+            <div style="display:flex; align-items:center; gap:4px;">
+              <span style="font-weight:700; font-size:11px; color:#555;">DATE:</span>
+              <select id="ppaFilterDate" class="ppa-filter-item-control" style="min-width: 135px; font-weight:600;">
+                <option value="ALL">Semua Tanggal</option>
+              </select>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:4px;">
+              <span style="font-weight:700; font-size:11px; color:#555;">WEEK:</span>
+              <select id="ppaFilterWeek" class="ppa-filter-item-control" style="min-width: 80px;">
+                <option value="ALL">-</option>
+                <option value="W37">W37</option>
+                <option value="W36">W36</option>
+              </select>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:4px;">
+              <span style="font-weight:700; font-size:11px; color:#555;">Shift:</span>
+              <select id="ppaFilterShift" class="ppa-filter-item-control" style="min-width: 85px;">
+                <option value="ALL">2 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(1)</option>
+                <option value="1">Shift 1</option>
+                <option value="2">Shift 2</option>
+              </select>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:4px;">
+              <span style="font-weight:700; font-size:11px; color:#555;">Lokasi:</span>
+              <select id="ppaFilterLocation" class="ppa-filter-item-control" style="min-width: 90px;">
+                <option value="ALL">-</option>
+                <option value="ROOM A1">ROOM A1</option>
+                <option value="ROOM A2">ROOM A2</option>
+              </select>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:4px;">
+              <span style="font-weight:700; font-size:11px; color:#555;">ID unit:</span>
+              <select id="ppaFilterUnit" class="ppa-filter-item-control" style="min-width: 90px;">
+                <option value="ALL">-</option>
+              </select>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:4px;">
+              <span style="font-weight:700; font-size:11px; color:#555;">Status:</span>
+              <select id="ppaFilterStatus" class="ppa-filter-item-control" style="min-width: 85px;">
+                <option value="ALL">-</option>
+                <option value="On Time">On Time</option>
+                <option value="Out Off Time">Out Off Time</option>
+              </select>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:4px;">
+              <span style="font-weight:700; font-size:11px; color:#555;">Problem:</span>
+              <select id="ppaFilterProblem" class="ppa-filter-item-control" style="min-width: 110px;">
+                <option value="ALL">-</option>
+                <option value="13.NO PROBLEM">13.NO PROBLEM</option>
+                <option value="15.BATTERY LOW POWER">15.BATTERY LOW POWER</option>
+                <option value="03.SWAP STATION ERROR">03.SWAP STATION ERROR</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- 5 Dark Crimson KPI Cards -->
+          <div class="ppa-kpi-cards-grid">
+            <!-- Card 1: Total Unit -->
+            <div class="ppa-red-card">
+              <div class="ppa-card-icon-circle">🔌</div>
+              <div class="ppa-card-content">
+                <span class="ppa-card-label">Total Unit</span>
+                <span class="ppa-card-number" id="ppaKpiTotalUnit">56</span>
+              </div>
+            </div>
+
+            <!-- Card 2: Frekuensi Swab -->
+            <div class="ppa-red-card">
+              <div class="ppa-card-icon-circle">📈</div>
+              <div class="ppa-card-content">
+                <span class="ppa-card-label">Frekuensi Swab</span>
+                <span class="ppa-card-number" id="ppaKpiFreqSwab">173</span>
+              </div>
+            </div>
+
+            <!-- Card 3: Total Energi (Kwh) -->
+            <div class="ppa-red-card">
+              <div class="ppa-card-icon-circle">⚡</div>
+              <div class="ppa-card-content">
+                <span class="ppa-card-label">Total Energi (Kwh)</span>
+                <span class="ppa-card-number" id="ppaKpiTotalEnergy">53,305</span>
+              </div>
+            </div>
+
+            <!-- Card 4: Average Usage (Kwh) -->
+            <div class="ppa-red-card">
+              <div class="ppa-card-icon-circle">⚡</div>
+              <div class="ppa-card-content">
+                <span class="ppa-card-label">Average Usage (Kwh)</span>
+                <span class="ppa-card-number" id="ppaKpiAvgUsage">308.12</span>
+              </div>
+            </div>
+
+            <!-- Card 5: CHARGING TIME (MENIT) -->
+            <div class="ppa-red-card">
+              <div class="ppa-card-icon-circle">⏱️</div>
+              <div class="ppa-card-content">
+                <span class="ppa-card-label">CHARGING TIME (MENIT)</span>
+                <span class="ppa-card-number" id="ppaKpiChargingTime">6.18</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 1: 4 Charts -->
+          <div class="ppa-charts-quad-grid">
+            <!-- Chart 1: Ach Ketepatan Sch Swab -->
+            <div class="ppa-chart-card-box">
+              <div class="ppa-chart-title-italic">Ach Ketepatan Sch Swab</div>
+              <div class="ppa-canvas-wrapper">
+                <canvas id="ppaChartKetepatan"></canvas>
+              </div>
+            </div>
+
+            <!-- Chart 2: Trend Frekuensi Swab (Daily) -->
+            <div class="ppa-chart-card-box">
+              <div class="ppa-chart-title-italic">Trend Frekuensi Swab (Daily)</div>
+              <div class="ppa-canvas-wrapper">
+                <canvas id="ppaChartFreqDaily"></canvas>
+              </div>
+            </div>
+
+            <!-- Chart 3: Trend Ach Frekuensi Swab (Weekly) -->
+            <div class="ppa-chart-card-box">
+              <div class="ppa-chart-title-italic">Trend Ach Frekuensi Swab (Weekly)</div>
+              <div class="ppa-canvas-wrapper">
+                <canvas id="ppaChartFreqWeekly"></canvas>
+              </div>
+            </div>
+
+            <!-- Chart 4: Trend Ach Frekuensi Swab (Monthly) -->
+            <div class="ppa-chart-card-box">
+              <div class="ppa-chart-title-italic">Trend Ach Frekuensi Swab (Monthly)</div>
+              <div class="ppa-canvas-wrapper">
+                <canvas id="ppaChartFreqMonthly"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 2: 4 Charts -->
+          <div class="ppa-charts-quad-grid">
+            <!-- Chart 5: Swab ROM A1 VS ROM A2 -->
+            <div class="ppa-chart-card-box">
+              <div class="ppa-chart-title-italic">Swab ROM A1 VS ROM A2</div>
+              <div class="ppa-canvas-wrapper">
+                <canvas id="ppaChartRoomCompare"></canvas>
+              </div>
+            </div>
+
+            <!-- Chart 6: Trend Energi Per Unit -->
+            <div class="ppa-chart-card-box">
+              <div class="ppa-chart-title-italic">Trend Energi Per Unit (Top kWh)</div>
+              <div class="ppa-canvas-wrapper">
+                <canvas id="ppaChartEnergyUnit"></canvas>
+              </div>
+            </div>
+
+            <!-- Chart 7: Trend Energi Per Hari (Daily) -->
+            <div class="ppa-chart-card-box">
+              <div class="ppa-chart-title-italic">Trend Energi Per Hari (Daily)</div>
+              <div class="ppa-canvas-wrapper">
+                <canvas id="ppaChartEnergyDaily"></canvas>
+              </div>
+            </div>
+
+            <!-- Chart 8: Frekuensi Problem Breakdown -->
+            <div class="ppa-chart-card-box">
+              <div class="ppa-chart-title-italic">Frekuensi Problem Breakdown</div>
+              <div class="ppa-canvas-wrapper">
+                <canvas id="ppaChartProblemBreakdown"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Detailed Table Section -->
+          <div class="ppa-exec-table-box">
+            <div style="overflow-x: auto;">
+              <table class="ppa-exec-table">
+                <thead>
+                  <tr>
+                    <th>DATE</th>
+                    <th>SHIFT</th>
+                    <th>CATEGORY</th>
+                    <th>KODE UNIT</th>
+                    <th>SCHEDULE SWAP</th>
+                    <th>TIME AKTUAL SWAP</th>
+                    <th>RESUME KETEPATAN</th>
+                    <th>KETERANGAN</th>
+                    <th style="text-align: right;">ENERGY (KWH)</th>
+                  </tr>
+                </thead>
+                <tbody id="ppaExecTableBody">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+            </div>
+            <div style="padding: 6px 12px; display: flex; justify-content: flex-end; align-items: center; gap: 12px; font-size: 11px; color: #666; background: #fff; border-top: 1px solid #e0e0e0;">
+              <span id="ppaTableRangeText">1 - 10 / 173</span>
+              <div style="display: flex; gap: 4px;">
+                <button class="btn-tbl-action" id="ppaTablePrev" style="width: 22px; height: 22px;">&lt;</button>
+                <button class="btn-tbl-action" id="ppaTableNext" style="width: 22px; height: 22px;">&gt;</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- PPA Corporate Footer Ribbon -->
+          <div class="ppa-footer-ribbon">
+            <div class="ppa-social-links">
+              <a href="https://www.ppa.co.id" target="_blank" class="ppa-social-link-item">
+                <span>🌐</span> www.ppa.co.id
+              </a>
+              <span class="ppa-social-link-item">
+                <span>📷</span> pt.ppa.official
+              </span>
+              <span class="ppa-social-link-item">
+                <span>📘</span> PT Putra Perkasa Abadi
+              </span>
+              <span class="ppa-social-link-item">
+                <span>🔗</span> Putra Perkasa Abadi
+              </span>
+            </div>
+
+            <div class="ppa-synergy-logo-box">
+              <span>⛰️ SYNERGY TO BE NUMBER 1</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ===================================================================
+           VIEW 4: POPULASI UNIT EV (CRUD MASTER DATA)
+           =================================================================== -->
+      <div id="viewPopulasiUnit" style="display: none;">
+        <div class="content-breadcrumb-header">
+          <div class="page-title-box">
+            <h1>Populasi Unit</h1>
+            <small>Master Data Armada Truk Listrik (EV Fleet)</small>
+          </div>
+          <ul class="breadcrumb-list">
+            <li><a href="#">🏠 Home</a></li>
+            <li class="breadcrumb-separator">></li>
+            <li><a href="#">Populasi Unit</a></li>
+            <li class="breadcrumb-separator">></li>
+            <li style="color: #333;">Daftar Unit EV</li>
+          </ul>
+        </div>
+
+        <div class="panel-card">
+          <div class="panel-header">
+            <div class="panel-title">Daftar Populasi Unit Truk EV</div>
+            <button class="btn-export-green" id="btnOpenAddUnitModal">
+              <span>➕</span> + Tambah Unit EV Baru
+            </button>
+          </div>
+          <div class="panel-body">
+            <div class="table-filter-bar">
+              <div>
+                Show 
+                <select id="selectUnitPerPage" class="entries-select">
+                  <option value="10">10</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                </select> entries
+              </div>
+              <div style="display: flex; gap: 8px; align-items: center;">
+                <select id="filterUnitStatus" class="entries-select" style="margin: 0;">
+                  <option value="ALL">Semua Status</option>
+                  <option value="Aktif">Aktif</option>
+                  <option value="Standby">Standby</option>
+                  <option value="Breakdown">Breakdown</option>
+                </select>
+                Search: <input type="text" id="inputUnitSearch" class="search-table-input" placeholder="Cari Kode Unit...">
+              </div>
+            </div>
+
+            <div class="table-responsive-box">
+              <table class="enterprise-data-table">
+                <thead>
+                  <tr>
+                    <th style="width: 50px; text-align: center;">No</th>
+                    <th>Kode Unit <span class="sort-icon">⇅</span></th>
+                    <th>Tipe / Model <span class="sort-icon">⇅</span></th>
+                    <th>Status Operasional <span class="sort-icon">⇅</span></th>
+                    <th style="text-align: right;">Total Swap Hari Ini <span class="sort-icon">⇅</span></th>
+                    <th>Lokasi Terakhir <span class="sort-icon">⇅</span></th>
+                    <th>Keterangan <span class="sort-icon">⇅</span></th>
+                    <th style="text-align: center; width: 80px;">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="unitTableBody">
+                  <!-- Populated via JS -->
+                </tbody>
+              </table>
+            </div>
+
+            <div class="table-footer-pagination">
+              <div id="unitRecordInfo">Showing 1 to 10 of 56 entries</div>
+              <div class="pagination-nav" id="unitPaginationContainer"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ===================================================================
+           VIEW 6: DATABASE MANAGER (PUSAT PENGELOLAAN SELURUH DATA & MASTER)
+           =================================================================== -->
+      <div id="viewDatabaseManager" style="display: none;">
+
+        <!-- Page Header & Title Bar -->
+        <div class="db-header-panel">
+          <div class="db-header-left">
+            <div class="db-header-icon-box">🗄️</div>
+            <div>
+              <h2 class="db-header-title">Database Management Center</h2>
+              <p class="db-header-subtitle">Pusat kontrol &amp; pengelolaan master data (Pengguna, Transaksi, Log Masalah, Jadwal, Unit, serta Ekspor/Impor)</p>
+            </div>
+          </div>
+          <div class="db-header-actions">
+            <button type="button" class="btn-db-quick-backup" id="btnDbHeaderQuickBackup" title="Download cadangan data lengkap (JSON)">
+              <span>💾</span> Export Backup JSON
+            </button>
+          </div>
+        </div>
+
+        <!-- Metric Stat Cards -->
+        <div class="db-stats-grid">
+          <div class="db-stat-card" data-tab-target="users">
+            <div class="db-stat-icon-wrap user-bg">👥</div>
+            <div class="db-stat-content">
+              <span class="db-stat-label">Total Pengguna / Akun</span>
+              <div class="db-stat-val" id="dbStatUsers">0</div>
+              <span class="db-stat-sub" id="dbStatUsersDetail">0 Operator • 0 Spv</span>
+            </div>
+          </div>
+
+          <div class="db-stat-card" data-tab-target="swaps">
+            <div class="db-stat-icon-wrap swap-bg">⚡</div>
+            <div class="db-stat-content">
+              <span class="db-stat-label">Transaksi Swap</span>
+              <div class="db-stat-val" id="dbStatSwaps">0</div>
+              <span class="db-stat-sub">Semua rekaman data input</span>
+            </div>
+          </div>
+
+          <div class="db-stat-card" data-tab-target="problems">
+            <div class="db-stat-icon-wrap prob-bg">⚠️</div>
+            <div class="db-stat-content">
+              <span class="db-stat-label">Problem &amp; Downtime</span>
+              <div class="db-stat-val" id="dbStatProblems">0</div>
+              <span class="db-stat-sub">Log gangguan operasional</span>
+            </div>
+          </div>
+
+          <div class="db-stat-card" data-tab-target="schedules">
+            <div class="db-stat-icon-wrap sch-bg">🎯</div>
+            <div class="db-stat-content">
+              <span class="db-stat-label">Jadwal Swap</span>
+              <div class="db-stat-val" id="dbStatSchedules">0</div>
+              <span class="db-stat-sub">Alokasi antrean unit</span>
+            </div>
+          </div>
+
+          <div class="db-stat-card" data-tab-target="units">
+            <div class="db-stat-icon-wrap unit-bg">🚜</div>
+            <div class="db-stat-content">
+              <span class="db-stat-label">Populasi Armada</span>
+              <div class="db-stat-val" id="dbStatUnits">0</div>
+              <span class="db-stat-sub">DT EV 90T terdaftar</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab Navigation Bar -->
+        <div class="db-main-tabs-wrapper">
+          <div class="db-tabs-nav" id="dbTabsNav">
+            <button type="button" class="db-tab-btn active" data-tab="users">
+              <span>👥</span> Kelola Pengguna &amp; Akun
+            </button>
+            <button type="button" class="db-tab-btn" data-tab="swaps">
+              <span>⚡</span> Data Transaksi Swap
+            </button>
+            <button type="button" class="db-tab-btn" data-tab="problems">
+              <span>⚠️</span> Log Problem Gangguan
+            </button>
+            <button type="button" class="db-tab-btn" data-tab="schedules">
+              <span>🎯</span> Jadwal Swap (Schedule)
+            </button>
+            <button type="button" class="db-tab-btn" data-tab="units">
+              <span>🚜</span> Populasi Armada DT
+            </button>
+            <button type="button" class="db-tab-btn" data-tab="backup">
+              <span>💾</span> Backup, Restore &amp; Migrasi
+            </button>
+          </div>
+        </div>
+
+        <!-- ==================== TAB 1: USERS ==================== -->
+        <div class="db-tab-pane active" id="dbPaneUsers">
+          <div class="panel-card">
+            <div class="panel-header-ent">
+              <div class="panel-title-ent">
+                <span>👥</span> Daftar Akun &amp; Kredensial Pengguna
+              </div>
+              <div class="panel-tools-ent">
+                <button type="button" class="btn-export-green" id="btnDbAddUser">
+                  <span>➕</span> Tambah Pengguna Baru
+                </button>
+              </div>
+            </div>
+            <div class="panel-body">
+              <!-- Filter & Search -->
+              <div class="db-filter-bar">
+                <div class="db-search-box">
+                  <span class="db-search-icon">🔍</span>
+                  <input type="text" id="dbUserSearch" class="form-control-ent" placeholder="Cari NIK, nama pengguna, atau jabatan...">
+                </div>
+                <div class="db-filter-group">
+                  <select id="dbUserRoleFilter" class="form-control-ent" style="min-width: 140px;">
+                    <option value="">Semua Role</option>
+                    <option value="OPERATOR">OPERATOR</option>
+                    <option value="SUPERVISOR">SUPERVISOR / LEADER</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Users Table -->
+              <div class="table-responsive-box">
+                <table class="enterprise-data-table">
+                  <thead>
+                    <tr>
+                      <th style="width: 50px; text-align: center;">No</th>
+                      <th>NIK</th>
+                      <th>Nama Lengkap</th>
+                      <th>Jabatan (Title)</th>
+                      <th>Role Akses</th>
+                      <th>Password Login</th>
+                      <th style="text-align: center; width: 140px;">Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dbUsersTableBody">
+                    <!-- Populated via JS -->
+                  </tbody>
+                </table>
+              </div>
+              <div class="db-table-info-row">
+                <span id="dbUsersCountInfo">Menampilkan 0 pengguna</span>
+                <span class="db-hint-text">💡 Password default pengguna adalah NIK masing-masing jika belum diubah.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================== TAB 2: SWAPS ==================== -->
+        <div class="db-tab-pane" id="dbPaneSwaps">
+          <div class="panel-card">
+            <div class="panel-header-ent">
+              <div class="panel-title-ent">
+                <span>⚡</span> Master Data Transaksi Battery Swap
+              </div>
+              <div class="panel-tools-ent">
+                <button type="button" class="btn-export-green" id="btnDbExportSwapsCsv">
+                  <span>📥</span> Unduh CSV Transaksi
+                </button>
+              </div>
+            </div>
+            <div class="panel-body">
+              <!-- Search & Filters -->
+              <div class="db-filter-bar flex-wrap">
+                <div class="db-search-box">
+                  <span class="db-search-icon">🔍</span>
+                  <input type="text" id="dbSwapSearch" class="form-control-ent" placeholder="Cari ID, Unit, Operator, Keterangan...">
+                </div>
+                <div class="db-filter-group">
+                  <select id="dbSwapShiftFilter" class="form-control-ent">
+                    <option value="">Semua Shift</option>
+                    <option value="1">Shift 1</option>
+                    <option value="2">Shift 2</option>
+                  </select>
+                  <input type="date" id="dbSwapDateFilter" class="form-control-ent">
+                  <button type="button" class="btn-show" id="btnDbResetSwapFilter">Reset Filter</button>
+                </div>
+              </div>
+
+              <div class="table-responsive-box">
+                <table class="enterprise-data-table">
+                  <thead>
+                    <tr>
+                      <th style="width: 45px; text-align: center;">No</th>
+                      <th>ID Transaksi</th>
+                      <th>Tanggal</th>
+                      <th>Shift</th>
+                      <th>Unit DT</th>
+                      <th>HM</th>
+                      <th>Bat (In/Out)</th>
+                      <th>Jam (In/Out)</th>
+                      <th>Durasi</th>
+                      <th>Operator</th>
+                      <th>Status Remark</th>
+                      <th style="text-align: center; width: 110px;">Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dbSwapsTableBody">
+                    <!-- Populated via JS -->
+                  </tbody>
+                </table>
+              </div>
+              <div class="table-footer-pagination">
+                <div id="dbSwapRecordInfo">Menampilkan 0 data</div>
+                <div class="pagination-nav" id="dbSwapPaginationContainer"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================== TAB 3: PROBLEMS ==================== -->
+        <div class="db-tab-pane" id="dbPaneProblems">
+          <div class="panel-card">
+            <div class="panel-header-ent">
+              <div class="panel-title-ent">
+                <span>⚠️</span> Master Log Problem &amp; Gangguan
+              </div>
+              <div class="panel-tools-ent">
+                <button type="button" class="btn-export-green" id="btnDbAddProblem">
+                  <span>➕</span> Tambah Log Masalah
+                </button>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="db-filter-bar">
+                <div class="db-search-box">
+                  <span class="db-search-icon">🔍</span>
+                  <input type="text" id="dbProblemSearch" class="form-control-ent" placeholder="Cari unit, deskripsi masalah, ID...">
+                </div>
+              </div>
+
+              <div class="table-responsive-box">
+                <table class="enterprise-data-table">
+                  <thead>
+                    <tr>
+                      <th style="width: 45px; text-align: center;">No</th>
+                      <th>ID Log</th>
+                      <th>Tanggal</th>
+                      <th>Shift</th>
+                      <th>Unit / Lokasi</th>
+                      <th>Deskripsi Masalah / Breakdown</th>
+                      <th>Jam Open</th>
+                      <th>Jam Close</th>
+                      <th>Durasi</th>
+                      <th style="text-align: center; width: 100px;">Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dbProblemsTableBody">
+                    <!-- Populated via JS -->
+                  </tbody>
+                </table>
+              </div>
+              <div class="db-table-info-row">
+                <span id="dbProblemsCountInfo">Menampilkan 0 problem</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================== TAB 4: SCHEDULES ==================== -->
+        <div class="db-tab-pane" id="dbPaneSchedules">
+          <div class="panel-card">
+            <div class="panel-header-ent">
+              <div class="panel-title-ent">
+                <span>🎯</span> Master Jadwal Swap (Schedule &amp; Queue Plan)
+              </div>
+              <div class="panel-tools-ent">
+                <button type="button" class="btn-export-green" id="btnDbAddSchedule">
+                  <span>➕</span> Tambah Jadwal Baru
+                </button>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="db-filter-bar">
+                <div class="db-search-box">
+                  <span class="db-search-icon">🔍</span>
+                  <input type="text" id="dbScheduleSearch" class="form-control-ent" placeholder="Cari unit, tanggal, jam target...">
+                </div>
+                <div class="db-filter-group">
+                  <select id="dbScheduleShiftFilter" class="form-control-ent">
+                    <option value="">Semua Shift</option>
+                    <option value="1">Shift 1</option>
+                    <option value="2">Shift 2</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="table-responsive-box">
+                <table class="enterprise-data-table">
+                  <thead>
+                    <tr>
+                      <th style="width: 45px; text-align: center;">No</th>
+                      <th>Tanggal</th>
+                      <th>Shift</th>
+                      <th>Kode Unit DT</th>
+                      <th>Target Jam (Time Sch)</th>
+                      <th style="text-align: center; width: 100px;">Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dbSchedulesTableBody">
+                    <!-- Populated via JS -->
+                  </tbody>
+                </table>
+              </div>
+              <div class="table-footer-pagination">
+                <div id="dbScheduleRecordInfo">Menampilkan 0 jadwal</div>
+                <div class="pagination-nav" id="dbSchedulePaginationContainer"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================== TAB 5: UNITS ==================== -->
+        <div class="db-tab-pane" id="dbPaneUnits">
+          <div class="panel-card">
+            <div class="panel-header-ent">
+              <div class="panel-title-ent">
+                <span>🚜</span> Master Populasi Armada EV Dump Truck 90T
+              </div>
+              <div class="panel-tools-ent">
+                <button type="button" class="btn-export-green" onclick="openAddUnitModal()">
+                  <span>➕</span> Tambah Armada Baru
+                </button>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="db-filter-bar">
+                <div class="db-search-box">
+                  <span class="db-search-icon">🔍</span>
+                  <input type="text" id="dbUnitSearch" class="form-control-ent" placeholder="Cari nomor kode unit...">
+                </div>
+              </div>
+
+              <div class="table-responsive-box">
+                <table class="enterprise-data-table">
+                  <thead>
+                    <tr>
+                      <th style="width: 50px; text-align: center;">No</th>
+                      <th>Kode Unit DT</th>
+                      <th>Model / Jenis</th>
+                      <th>Status Unit</th>
+                      <th style="text-align: right;">Total Swap Terdaftar</th>
+                      <th style="text-align: center; width: 90px;">Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dbUnitsTableBody">
+                    <!-- Populated via JS -->
+                  </tbody>
+                </table>
+              </div>
+              <div class="db-table-info-row">
+                <span id="dbUnitsCountInfo">Menampilkan 0 unit</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================== TAB 6: BACKUP & MIGRASI ==================== -->
+        <div class="db-tab-pane" id="dbPaneBackup">
+
+          <div class="db-backup-two-col">
+            
+            <!-- ================= LEFT COLUMN: MAIN BACKUP CONTROLS ================= -->
+            <div class="db-backup-col-main">
+
+              <!-- HERO CARD: Sinkronisasi & Backup ke Google Spreadsheet -->
+              <div class="panel-card db-backup-card db-card-hero-sync">
+                <div class="panel-header-ent" style="background: linear-gradient(135deg, #065f46 0%, #047857 100%); color: #ffffff;">
+                  <div class="panel-title-ent" style="color: #ffffff;">
+                    <span>☁️</span> Sinkronisasi / Backup ke Google Spreadsheet Master
+                  </div>
+                  <span class="db-badge-pill" style="background: rgba(255,255,255,0.2); color: #ffffff;">Smart Incremental Sync</span>
+                </div>
+                <div class="panel-body">
+                  <p class="db-backup-desc">
+                    Cadangkan data operasional terpilih dari database ke Google Spreadsheet Master. Sistem mendukung deteksi tanggal otomatis (*auto-resume*) agar hanya data baru yang belum pernah dibackup yang dikirim ke spreadsheet tanpa data ganda.
+                  </p>
+
+                  <!-- STEP 1: Pilih Tabel Target -->
+                  <div class="db-backup-section-group">
+                    <div class="db-section-group-header">
+                      <span class="db-section-step-badge">1</span>
+                      <label class="db-section-group-title">PILIH LEMBAR / TABEL YANG INGIN DIBACKUP:</label>
+                      <div class="db-quick-table-actions">
+                        <button type="button" class="btn-link-action" id="btnSelectDailyOnly">Hanya Data Harian</button>
+                        <span class="sep">•</span>
+                        <button type="button" class="btn-link-action" id="btnSelectAllTables">Pilih Semua</button>
+                      </div>
+                    </div>
+
+                    <div class="db-table-chips-grid">
+                      <label class="db-table-chip-card">
+                        <input type="checkbox" id="chkBackupSwaps" checked>
+                        <div class="db-chip-content">
+                          <div class="db-chip-title">⚡ DATA INPUT</div>
+                          <span class="db-chip-sub">Transaksi Battery Swap</span>
+                        </div>
+                      </label>
+
+                      <label class="db-table-chip-card">
+                        <input type="checkbox" id="chkBackupProblems" checked>
+                        <div class="db-chip-content">
+                          <div class="db-chip-title">⚠️ DATA PROBLEM</div>
+                          <span class="db-chip-sub">Log Problem &amp; Downtime</span>
+                        </div>
+                      </label>
+
+                      <label class="db-table-chip-card">
+                        <input type="checkbox" id="chkBackupSchedules" checked>
+                        <div class="db-chip-content">
+                          <div class="db-chip-title">🎯 SCEDHULE</div>
+                          <span class="db-chip-sub">Jadwal Swap Unit EV</span>
+                        </div>
+                      </label>
+
+                      <label class="db-table-chip-card">
+                        <input type="checkbox" id="chkBackupUnits">
+                        <div class="db-chip-content">
+                          <div class="db-chip-title">🚜 POPULASI UNIT</div>
+                          <span class="db-chip-sub">Master Armada DT 90T</span>
+                        </div>
+                      </label>
+
+                      <label class="db-table-chip-card">
+                        <input type="checkbox" id="chkBackupUsers">
+                        <div class="db-chip-content">
+                          <div class="db-chip-title">👥 USER</div>
+                          <span class="db-chip-sub">Akun &amp; Kredensial</span>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+
+                  <!-- STEP 2: Filter Tanggal Cerdas -->
+                  <div class="db-backup-section-group" style="margin-top: 14px;">
+                    <div class="db-section-group-header">
+                      <span class="db-section-step-badge">2</span>
+                      <label class="db-section-group-title">STRATEGI TANGGAL DATA:</label>
+                    </div>
+
+                    <div class="db-date-strategy-grid">
+                      <!-- Option A: Auto-Resume -->
+                      <label class="db-strategy-card">
+                        <input type="radio" name="dbDateStrategy" value="auto" checked id="radioDateStrategyAuto">
+                        <div class="db-strategy-content">
+                          <div class="db-strategy-header">
+                            <strong>⚡ Otomatis Lanjutkan dari Backup Terakhir (Rekomendasi)</strong>
+                            <span class="db-strategy-tag tag-auto">Auto-Resume</span>
+                          </div>
+                          <p class="db-strategy-desc">
+                            Sistem mendeteksi tanggal data terakhir yang telah dibackup (<strong id="lblCutoffDateInfo">-</strong>). 
+                            Hanya data tanggal sesudahnya s/d hari ini yang akan dikirim tanpa membuat duplikasi.
+                          </p>
+                        </div>
+                      </label>
+
+                      <!-- Option B: Custom Date Range -->
+                      <label class="db-strategy-card">
+                        <input type="radio" name="dbDateStrategy" value="range" id="radioDateStrategyRange">
+                        <div class="db-strategy-content">
+                          <div class="db-strategy-header">
+                            <strong>📅 Kustom Rentang Tanggal Tertentu</strong>
+                            <span class="db-strategy-tag tag-custom">Pilih Tanggal</span>
+                          </div>
+                          <p class="db-strategy-desc">
+                            Tentukan periode tanggal awal dan akhir yang ingin dibackup ke Google Sheets:
+                          </p>
+                          <div class="db-date-inputs-row" id="wrapCustomDateInputs" style="margin-top: 8px;">
+                            <div class="db-date-input-group">
+                              <label>Dari Tanggal:</label>
+                              <input type="date" id="inpBackupStartDate" class="form-control-ent">
+                            </div>
+                            <div class="db-date-input-group">
+                              <label>Sampai Tanggal:</label>
+                              <input type="date" id="inpBackupEndDate" class="form-control-ent">
+                            </div>
+                          </div>
+                        </div>
+                      </label>
+
+                      <!-- Option C: All Historical Data -->
+                      <label class="db-strategy-card">
+                        <input type="radio" name="dbDateStrategy" value="all" id="radioDateStrategyAll">
+                        <div class="db-strategy-content">
+                          <div class="db-strategy-header">
+                            <strong>🔄 Semua Tanggal (Seluruh Data Riwayat)</strong>
+                            <span class="db-strategy-tag tag-all">All History</span>
+                          </div>
+                          <p class="db-strategy-desc">
+                            Mencadangkan seluruh data transaksi tanpa membatasi tanggal (ID transaksi yang sudah ada di sheet tetap tidak akan diduplikasi).
+                          </p>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+
+                  <!-- STEP 3: Live Preview & Count -->
+                  <div class="db-backup-preview-box" id="dbBackupPreviewBox">
+                    <div class="db-preview-icon">📦</div>
+                    <div class="db-preview-text">
+                      <span class="db-preview-label">Kalkulasi Data yang Siap Dikirim:</span>
+                      <strong class="db-preview-val" id="txtBackupCountPreview">Memuat data...</strong>
+                    </div>
+                  </div>
+
+                  <!-- Action Button Row -->
+                  <div class="db-backup-hero-actions" style="margin-top: 16px;">
+                    <button type="button" class="btn-db-hero-backup" id="btnDbBackupAllToSheets">
+                      <span class="btn-icon">⚡</span>
+                      <span class="btn-text">BACKUP DATA TERPILIH KE GOOGLE SHEET</span>
+                    </button>
+
+                    <a href="https://docs.google.com/spreadsheets/d/1wLWDdDo61Of6oL0viw1LW2FYSFQnKDrnt6UcmUTZW-Q/edit" target="_blank" rel="noopener noreferrer" class="btn-db-open-sheet" title="Buka Spreadsheet di Tab Baru">
+                      <span>📊</span> Buka Google Spreadsheet Master ↗
+                    </a>
+                  </div>
+
+                  <!-- Progress / Status Box -->
+                  <div id="dbBackupSyncProgress" class="db-sync-progress-box" style="display: none;">
+                    <div class="db-progress-bar-wrap">
+                      <div class="db-progress-bar-fill" id="dbBackupProgressBar"></div>
+                    </div>
+                    <div class="db-progress-status-text" id="dbBackupProgressText">Memulai sinkronisasi data...</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card: Pengaturan Target Database & Firebase Config -->
+              <div class="panel-card db-backup-card" style="margin-top: 16px;">
+                <div class="panel-header-ent" style="background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                  <div class="panel-title-ent" style="color: #0f172a;">
+                    <span>⚙️</span> Pengaturan Database Target &amp; Kesiapan Firebase
+                  </div>
+                  <span class="db-badge-pill" style="background: #eff6ff; color: #1d4ed8;">Supervisor Only</span>
+                </div>
+                <div class="panel-body">
+                  <div class="db-config-fields-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                    <div class="form-group-ent" style="margin-bottom: 0;">
+                      <label class="form-label-ent" style="font-size: 11px;">Google Spreadsheet Target ID</label>
+                      <input type="text" id="cfgSpreadsheetId" class="form-control-ent" value="1wLWDdDo61Of6oL0viw1LW2FYSFQnKDrnt6UcmUTZW-Q" placeholder="Spreadsheet ID...">
+                    </div>
+                    <div class="form-group-ent" style="margin-bottom: 0;">
+                      <label class="form-label-ent" style="font-size: 11px;">Firebase Project ID (Cloud Firestore)</label>
+                      <input type="text" id="cfgFirebaseProjectId" class="form-control-ent" value="ppa-voltswap-charging" placeholder="contoh: my-firebase-app">
+                    </div>
+                  </div>
+
+                  <div class="firebase-ready-status" id="dbFirebaseReadyNotice" style="margin-top: 12px;">
+                    <span>✅</span> Seluruh data lokal dan riwayat transaksi sudah terstruktur rapi dan siap ditautkan ke Firebase Firestore!
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- ================= RIGHT COLUMN: STATUS WIDGET & EXPORTS ================= -->
+            <div class="db-backup-col-side">
+
+              <!-- WIDGET 1: Status Koneksi Cloud & Riwayat -->
+              <div class="panel-card db-backup-card db-side-widget-card">
+                <div class="panel-header-ent">
+                  <div class="panel-title-ent">
+                    <span>📡</span> Status Koneksi &amp; Riwayat
+                  </div>
+                </div>
+                <div class="panel-body" style="padding: 14px 16px;">
+                  
+                  <div class="db-side-status-item">
+                    <div class="db-side-status-icon fb-icon">🔥</div>
+                    <div class="db-side-status-info">
+                      <span class="db-side-item-label">Database Operasional</span>
+                      <span class="db-side-item-title">Firebase Cloud Firestore</span>
+                      <div class="db-sync-card-badge status-ready" id="badgeFirebaseStatus">
+                        <span class="dot pulse-green"></span> Siap Dimigrasikan
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="db-side-status-item" style="margin-top: 12px;">
+                    <div class="db-side-status-icon gs-icon">📊</div>
+                    <div class="db-side-status-info">
+                      <span class="db-side-item-label">Spreadsheet Master (Cadangan)</span>
+                      <span class="db-side-item-title">Google Sheets Warehouse</span>
+                      <div class="db-sync-card-badge status-active" id="badgeSheetsStatus">
+                        <span class="dot active-green"></span> Terhubung Aktif
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="db-side-status-item" style="margin-top: 12px; border-top: 1px dashed #e2e8f0; padding-top: 12px;">
+                    <div class="db-side-status-icon time-icon">🕒</div>
+                    <div class="db-side-status-info">
+                      <span class="db-side-item-label">Riwayat Backup Terakhir</span>
+                      <span class="db-side-item-title" id="txtLastSheetsBackupTime">Belum ada riwayat backup</span>
+                      <div class="db-sync-card-sub" id="txtLastSheetsBackupUser">Oleh: -</div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              <!-- WIDGET 2: Ekspor Microsoft Excel (.xlsx Asli) -->
+              <div class="panel-card db-backup-card db-side-widget-card" style="margin-top: 16px;">
+                <div class="panel-header-ent">
+                  <div class="panel-title-ent">
+                    <span>📊</span> Ekspor Microsoft Excel (.xlsx)
+                  </div>
+                  <span class="db-badge-pill" style="background: #dcfce7; color: #166534;">XLSX Ready</span>
+                </div>
+                <div class="panel-body">
+                  <p class="db-backup-desc" style="margin-bottom: 12px;">
+                    Unduh data dalam format Microsoft Excel (.xlsx) murni dengan format tabel rapi:
+                  </p>
+
+                  <button type="button" class="btn-db-action-excel-master" id="btnDbExportAllExcel">
+                    <span>📥</span> Unduh Master Excel (.xlsx All-in-One)
+                  </button>
+                  <div class="db-hint-text" style="margin-top: 5px; margin-bottom: 12px;">
+                    💡 Berisi 5 sheet: <strong>USERS</strong>, <strong>SWAP</strong>, <strong>PROBLEM</strong>, <strong>JADWAL</strong>, &amp; <strong>ARMADA</strong>.
+                  </div>
+
+                  <div class="db-csv-buttons-flex">
+                    <button type="button" class="btn-db-csv-chip" id="btnDbExportUsersExcel">👥 Users</button>
+                    <button type="button" class="btn-db-csv-chip" id="btnDbExportSwapsExcel">⚡ Swaps</button>
+                    <button type="button" class="btn-db-csv-chip" id="btnDbExportProblemsExcel">⚠️ Problems</button>
+                    <button type="button" class="btn-db-csv-chip" id="btnDbExportSchedulesExcel">🎯 Jadwal</button>
+                    <button type="button" class="btn-db-csv-chip" id="btnDbExportUnitsExcel">🚜 Armada</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- WIDGET 3: Cadangan & Restore Berkas JSON Offline -->
+              <div class="panel-card db-backup-card db-side-widget-card" style="margin-top: 16px;">
+                <div class="panel-header-ent">
+                  <div class="panel-title-ent">
+                    <span>📦</span> Cadangan JSON Offline
+                  </div>
+                  <span class="db-badge-pill" style="background: #f1f5f9; color: #475569;">JSON Format</span>
+                </div>
+                <div class="panel-body">
+                  <p class="db-backup-desc" style="margin-bottom: 12px;">
+                    Arsip lengkap berkas JSON terstruktur atau pulihkan sistem dari berkas sebelumnya:
+                  </p>
+
+                  <div class="db-backup-action-box" style="margin-bottom: 10px;">
+                    <button type="button" class="btn-db-action-primary" id="btnDbExportAllJson" style="width: 100%; justify-content: center;">
+                      <span>💾</span> Unduh Full Backup JSON
+                    </button>
+                  </div>
+
+                  <div class="db-backup-action-box">
+                    <input type="file" id="dbImportFileInput" accept=".json" style="display: none;">
+                    <button type="button" class="btn-db-action-secondary" id="btnDbTriggerImport" style="width: 100%; justify-content: center;">
+                      <span>📂</span> Pulihkan / Restore Data JSON...
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+  <!-- =======================================================================
+       MODAL 1: INPUT TRANSAKSI SWAP BARU
+       ======================================================================= -->
+  <div class="modal-overlay" id="modalAddSwap">
+    <div class="modal-dialog">
+      <div class="modal-header-ent">
+        <h4 class="modal-title-ent"><span>➕</span> Input Transaksi Swap Baterai</h4>
+        <button class="btn-close-ent" onclick="closeModal('modalAddSwap')">&times;</button>
+      </div>
+      <form id="formNewSwap">
+        <div class="modal-body-ent">
+          <div class="modal-form-grid">
+            <div class="form-group-ent">
+              <label class="form-label-ent">Lokasi Fasilitas (Otomatis)</label>
+              <input type="text" id="newSwapLoc" class="form-control-ent" readonly value="ROOM A1">
+            </div>
+
+            <div class="form-group-ent">
+              <label class="form-label-ent">Tanggal Operasional</label>
+              <input type="date" id="newSwapDate" class="form-control-ent" required>
+            </div>
+
+            <div class="form-group-ent">
+              <label class="form-label-ent">Shift</label>
+              <select id="newSwapShift" class="form-control-ent" required>
+                <option value="1">1</option>
+                <option value="2">2</option>
+              </select>
+            </div>
+
+            <div class="form-group-ent">
+              <label class="form-label-ent">Kode Unit Armada</label>
+              <select id="newSwapUnit" class="form-control-ent" required>
+                <!-- Filled via JS -->
+              </select>
+            </div>
+
+            <div class="form-group-ent">
+              <label class="form-label-ent">Hour Meter (HM)</label>
+              <input type="number" id="newSwapHM" class="form-control-ent" placeholder="150" step="1">
+            </div>
+
+            <div class="form-group-ent">
+              <label class="form-label-ent">Konsumsi Energi (kWh)</label>
+              <input type="number" id="newSwapEnergy" class="form-control-ent" placeholder="" step="0.1" required>
+            </div>
+
+            <div class="form-group-ent">
+              <label class="form-label-ent">Jam Masuk (Time In)</label>
+              <input type="time" id="newSwapJamIn" class="form-control-ent" step="1" required>
+            </div>
+
+            <div class="form-group-ent">
+              <label class="form-label-ent">Jam Keluar (Time Out)</label>
+              <input type="time" id="newSwapJamOut" class="form-control-ent" step="1" required>
+            </div>
+
+            <div class="form-group-ent">
+              <label class="form-label-ent">Baterai Masuk (Bat In)</label>
+              <input type="text" id="newSwapBatIn" class="form-control-ent" placeholder="" required autocomplete="off">
+            </div>
+
+            <div class="form-group-ent">
+              <label class="form-label-ent">Baterai Keluar (Bat Out)</label>
+              <input type="text" id="newSwapBatOut" class="form-control-ent" placeholder="" required autocomplete="off">
+            </div>
+
+            <!-- Status Remark 1 dihitung otomatis sesuai mode sistem -->
+            <input type="hidden" id="newSwapStatus" value="On Demand">
+
+            <div class="form-group-ent">
+              <label class="form-label-ent">Problem Remark 2</label>
+              <select id="newSwapRemark2" class="form-control-ent">
+                <option value="13.NO PROBLEM">13.NO PROBLEM</option>
+                <option value="15.BATTERY LOW POWER">15.BATTERY LOW POWER</option>
+                <option value="16.CHARGER ISSUE">16.CHARGER ISSUE</option>
+                <option value="17.CRANE OHC DELAY">17.CRANE OHC DELAY</option>
+                <option value="18.COAL SPILL OVER BATTERY">18.COAL SPILL OVER BATTERY</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer-ent">
+          <button type="button" class="btn-show" style="background:#888; border-color:#777;" onclick="closeModal('modalAddSwap')">Batal</button>
+          <button type="submit" class="btn-export-green"><span>💾</span> Simpan Transaksi</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       MODAL 2: PREVIEW DETAIL TRANSAKSI
+       ======================================================================= -->
+  <div class="modal-overlay" id="modalPreview">
+    <div class="modal-dialog">
+      <div class="modal-header-ent">
+        <h4 class="modal-title-ent"><span>👁️</span> Detail Transaksi Swap</h4>
+        <button class="btn-close-ent" onclick="closeModal('modalPreview')">&times;</button>
+      </div>
+      <div class="modal-body-ent">
+        <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+          <tr style="border-bottom: 1px solid #eee;">
+            <td style="padding: 6px 0; font-weight: 700; width: 140px; color: #555;">Transaction ID</td>
+            <td id="pvId" style="font-weight: 700; color: #0b5394;">-</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #eee;">
+            <td style="padding: 6px 0; font-weight: 700; color: #555;">Tanggal & Shift</td>
+            <td id="pvDateShift">-</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #eee;">
+            <td style="padding: 6px 0; font-weight: 700; color: #555;">Lokasi Fasilitas</td>
+            <td id="pvLoc" style="font-weight: 700;">-</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #eee;">
+            <td style="padding: 6px 0; font-weight: 700; color: #555;">Kode Unit Armada</td>
+            <td id="pvUnit" style="font-size: 14px; font-weight: 700; color: #d32f2f;">-</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #eee;">
+            <td style="padding: 6px 0; font-weight: 700; color: #555;">Hour Meter (HM)</td>
+            <td id="pvHM">-</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #eee;">
+            <td style="padding: 6px 0; font-weight: 700; color: #555;">Waktu Masuk / Keluar</td>
+            <td id="pvTimes">-</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #eee;">
+            <td style="padding: 6px 0; font-weight: 700; color: #555;">Durasi Pengerjaan</td>
+            <td id="pvDur" style="font-weight: 700;">-</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #eee;">
+            <td style="padding: 6px 0; font-weight: 700; color: #555;">Konsumsi Energi</td>
+            <td id="pvEnergy" style="color: #00a65a; font-weight: 700;">-</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #eee;">
+            <td style="padding: 6px 0; font-weight: 700; color: #555;">Status SOC Baterai</td>
+            <td id="pvBattery">-</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #eee;">
+            <td style="padding: 6px 0; font-weight: 700; color: #555;">Status Ketepatan</td>
+            <td id="pvStatus">-</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #eee;">
+            <td style="padding: 6px 0; font-weight: 700; color: #555;">Remark Kendala</td>
+            <td id="pvRemark">-</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #eee;">
+            <td style="padding: 6px 0; font-weight: 700; color: #555;">Keterangan</td>
+            <td id="pvKeterangan" style="font-style: italic; color: #334155;">-</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 0; font-weight: 700; color: #555;">Manpower / Operator</td>
+            <td id="pvOperator" style="font-weight: 700; color: #0b5394;">-</td>
+          </tr>
+        </table>
+      </div>
+      <div class="modal-footer-ent">
+        <button type="button" class="btn-show" onclick="closeModal('modalPreview')">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       MODAL 3: EDIT DATA TRANSAKSI
+       ======================================================================= -->
+  <div class="modal-overlay" id="modalEdit">
+    <div class="modal-dialog">
+      <div class="modal-header-ent">
+        <h4 class="modal-title-ent"><span>✏️</span> Edit Data Transaksi</h4>
+        <button class="btn-close-ent" onclick="closeModal('modalEdit')">&times;</button>
+      </div>
+      <form id="formEditRecord">
+        <div class="modal-body-ent">
+          <input type="hidden" id="editId">
+          <div class="modal-form-grid">
+            <div class="form-group-ent">
+              <label class="form-label-ent">Tanggal</label>
+              <input type="date" id="editDate" class="form-control-ent" required>
+            </div>
+            <div class="form-group-ent">
+              <label class="form-label-ent">Shift</label>
+              <select id="editShift" class="form-control-ent" required>
+                <option value="1">1</option>
+                <option value="2">2</option>
+              </select>
+            </div>
+            <div class="form-group-ent">
+              <label class="form-label-ent">Lokasi</label>
+              <select id="editLocation" class="form-control-ent" required>
+                <option value="ROOM A1">ROOM A1</option>
+                <option value="ROOM A2">ROOM A2</option>
+              </select>
+            </div>
+            <div class="form-group-ent">
+              <label class="form-label-ent">Unit</label>
+              <select id="editUnit" class="form-control-ent" required></select>
+            </div>
+            <div class="form-group-ent">
+              <label class="form-label-ent">HM</label>
+              <input type="number" id="editHM" class="form-control-ent">
+            </div>
+            <div class="form-group-ent">
+              <label class="form-label-ent">Energi (kWh)</label>
+              <input type="number" id="editEnergy" class="form-control-ent" step="0.1" required>
+            </div>
+            <div class="form-group-ent">
+              <label class="form-label-ent">Time In</label>
+              <input type="time" id="editJamIn" class="form-control-ent" step="1" required>
+            </div>
+            <div class="form-group-ent">
+              <label class="form-label-ent">Time Out</label>
+              <input type="time" id="editJamOut" class="form-control-ent" step="1" required>
+            </div>
+            <div class="form-group-ent">
+              <label class="form-label-ent">Bat In</label>
+              <input type="text" id="editBatIn" class="form-control-ent" required>
+            </div>
+            <div class="form-group-ent">
+              <label class="form-label-ent">Bat Out</label>
+              <input type="text" id="editBatOut" class="form-control-ent" required>
+            </div>
+            <div class="form-group-ent">
+              <label class="form-label-ent">Status</label>
+              <select id="editStatus" class="form-control-ent">
+                <option value="On Time">On Time</option>
+                <option value="Out Off Time">Out Off Time</option>
+              </select>
+            </div>
+            <div class="form-group-ent">
+              <label class="form-label-ent">Remark</label>
+              <select id="editRemark" class="form-control-ent">
+                <option value="13.NO PROBLEM">13.NO PROBLEM</option>
+                <option value="15.BATTERY LOW POWER">15.BATTERY LOW POWER</option>
+                <option value="16.CHARGER ISSUE">16.CHARGER ISSUE</option>
+                <option value="17.CRANE OHC DELAY">17.CRANE OHC DELAY</option>
+                <option value="18.COAL SPILL OVER BATTERY">18.COAL SPILL OVER BATTERY</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer-ent">
+          <button type="button" class="btn-show" style="background:#888; border-color:#777;" onclick="closeModal('modalEdit')">Batal</button>
+          <button type="submit" class="btn-export-green"><span>💾</span> Simpan Perubahan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       MODAL 4: DELETE CONFIRMATION
+       ======================================================================= -->
+  <div class="modal-overlay" id="modalDelete">
+    <div class="modal-dialog" style="max-width: 400px;">
+      <div class="modal-header-ent">
+        <h4 class="modal-title-ent" style="color: var(--primary-red);"><span>🗑️</span> Hapus Transaksi</h4>
+        <button class="btn-close-ent" onclick="closeModal('modalDelete')">&times;</button>
+      </div>
+      <div class="modal-body-ent">
+        <p style="font-size: 13px;">Apakah Anda yakin ingin menghapus data transaksi dengan ID: <strong id="delIdText" style="color: #0b5394;">-</strong>?</p>
+        <p style="font-size: 11px; color: #888; margin-top: 6px;">Data yang dihapus akan terhapus dari logsheet dan tabel ringkasan.</p>
+      </div>
+      <div class="modal-footer-ent">
+        <button type="button" class="btn-show" style="background:#888; border-color:#777;" onclick="closeModal('modalDelete')">Batal</button>
+        <button type="button" class="btn-show" style="background: var(--btn-red); border-color: #c23321;" id="btnDoDelete">Ya, Hapus Data</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       MODAL 5: LOGIN OPERATOR DENGAN NIK & AUTORISASI AKSES
+       ======================================================================= -->
+  <div class="modal-overlay" id="modalLocationLogin">
+    <div class="modal-dialog" style="max-width: 480px; border-radius: 6px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.35);">
+      <!-- Enterprise Red Header -->
+      <div class="modal-header-ent" style="background: linear-gradient(135deg, #d32f2f, #b71c1c); color: #ffffff; padding: 13px 18px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div style="width: 32px; height: 32px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px;">🔐</div>
+          <div>
+            <h4 class="modal-title-ent" style="color: #ffffff; margin: 0; font-size: 15px; font-weight: 700; letter-spacing: 0.02em;">LOGIN SISTEM OPERATOR</h4>
+            <div style="font-size: 11px; opacity: 0.9; font-weight: 400;">PPA Safe & Strong Operational Performance</div>
+          </div>
+        </div>
+        <button class="btn-close-ent" onclick="closeModal('modalLocationLogin')" style="color: #ffffff; font-size: 24px; opacity: 0.9;">&times;</button>
+      </div>
+
+      <form id="formOperatorLogin">
+        <div class="modal-body-ent" style="padding: 16px 20px; background: #fafbfc;">
+          
+          <!-- Step 1: Input NIK -->
+          <div class="form-group-ent" style="margin-bottom: 10px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+              <label class="form-label-ent" style="font-weight: 700; color: #1e293b; margin: 0;">Nomor Induk Karyawan (NIK) <span style="color:#d32f2f;">*</span></label>
+              <span style="font-size: 11px; color: #64748b;">Ketik 8 Digit NIK</span>
+            </div>
+            <div style="position: relative;">
+              <input type="text" id="loginNikInput" class="form-control-ent" 
+                placeholder="Masukkan NIK (contoh: 81230529)" 
+                maxlength="10" 
+                autocomplete="off" 
+                list="nikDatalist" 
+                style="padding: 9px 12px 9px 34px; font-family: var(--font-mono); font-size: 14px; font-weight: 600; letter-spacing: 0.05em; border: 1.5px solid #cbd5e1; border-radius: 5px;" 
+                required>
+              <span style="position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 14px;">🪪</span>
+            </div>
+            <datalist id="nikDatalist">
+              <option value="81230529">81230529 - ZAKARIYA ABIDIN</option>
+              <option value="81230588">81230588 - DAFFA GEDE KURNIAWAN</option>
+              <option value="81230176">81230176 - ABI SETIAWAN</option>
+              <option value="81230594">81230594 - VIRNANDA AGUS SETIAWAN</option>
+              <option value="81230596">81230596 - SRIVASTA NASOKA FARIMBA</option>
+              <option value="81230112">81230112 - BACHTIAR PUTRA DANANJAYA</option>
+              <option value="81230103">81230103 - APRIL YULIUS PESSIWARISA</option>
+              <option value="81230134">81230134 - INDRA ARIVYANTO</option>
+              <option value="99999999">99999999 - YUDA PUGUH WIDODO (SUPERVISOR)</option>
+            </datalist>
+          </div>
+
+          <!-- Step 2: Nama Karyawan (Otomatis Terisi) -->
+          <div class="form-group-ent" style="margin-bottom: 12px;">
+            <label class="form-label-ent" style="font-weight: 700; color: #1e293b; margin-bottom: 4px;">Nama Karyawan (Otomatis Terdeteksi)</label>
+            <div style="position: relative;">
+              <input type="text" id="loginUserName" class="form-control-ent" readonly 
+                placeholder="Ketik 8 digit NIK di atas..." 
+                style="padding: 9px 12px 9px 34px; font-weight: 700; color: #0b5394; background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 5px; font-size: 13.5px;">
+              <span style="position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: #64748b; font-size: 14px;">👤</span>
+            </div>
+            <!-- Verification Alert Box -->
+            <div id="loginNikStatusBadge" style="margin-top: 5px; font-size: 11.5px; padding: 5px 9px; border-radius: 4px; display: flex; align-items: center; gap: 6px; background: #fef3c7; color: #92400e; border: 1px solid #fde68a;">
+              <span>⏳</span> <span>Ketik 8 digit NIK karyawan</span>
+            </div>
+          </div>
+
+          <!-- Step 3: Hak Akses Role Info -->
+          <div id="loginAccessInfoBox" style="background: #eef2ff; border: 1px solid #c7d2fe; border-radius: 5px; padding: 8px 12px; margin-bottom: 12px; font-size: 11.5px; color: #3730a3;">
+            <div style="font-weight: 700; margin-bottom: 2px;">📋 Hak Akses Menu Tampilan:</div>
+            <div id="loginAccessDesc">
+              • <strong>Input Data</strong>: Terbuka (Formulir Digital Logsheet)<br>
+              • <strong>Operation</strong>: Terbuka (Charging Swap, History Daily, Problem Log)<br>
+              <span style="color: #b91c1c;">• Visual Analytics & KPI, Populasi: <em>Terkunci khusus Supervisor</em></span>
+            </div>
+          </div>
+
+          <!-- Step 4: Lokasi Stasiun & Shift -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 4px;">
+            <div class="form-group-ent" style="margin: 0;">
+              <label class="form-label-ent" style="font-weight: 700; color: #1e293b; margin-bottom: 4px;">Stasiun Pengisian <span style="color:#d32f2f;">*</span></label>
+              <select id="loginStationSelect" class="form-control-ent" style="padding: 8px 10px; font-weight: 600;">
+                <option value="ROOM A1">🏢 ROOM A1</option>
+                <option value="ROOM A2">🏭 ROOM A2</option>
+                <option value="SUPERVISOR" id="optStationSpv" style="display: none;">👑 SUPERVISOR</option>
+              </select>
+            </div>
+            <div class="form-group-ent" style="margin: 0;">
+              <label class="form-label-ent" style="font-weight: 700; color: #1e293b; margin-bottom: 4px;">Shift Kerja <span style="color:#d32f2f;">*</span></label>
+              <select id="loginShiftSelect" class="form-control-ent" style="padding: 8px 10px; font-weight: 600;">
+                <option value="1">Shift 1</option>
+                <option value="2">Shift 2</option>
+              </select>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="modal-footer-ent" style="padding: 12px 20px; background: #f1f5f9; display: flex; justify-content: space-between; align-items: center;">
+          <button type="button" class="btn-show" style="background: #94a3b8; border-color: #64748b; font-size: 12px; padding: 7px 16px;" onclick="closeModal('modalLocationLogin')">Batal</button>
+          <div style="display: flex; gap: 8px;">
+            <button type="submit" id="btnLoginSubmit" class="btn-export-green" style="background: #00a65a; border-color: #008d4c; font-size: 13px; padding: 8px 20px; font-weight: 700;" disabled>
+              <span>🚀</span> Masuk ke Sistem
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       MODAL 6: TAMBAH UNIT EV BARU
+       ======================================================================= -->
+  <div class="modal-overlay" id="modalAddUnit">
+    <div class="modal-dialog" style="max-width: 440px;">
+      <div class="modal-header-ent">
+        <h4 class="modal-title-ent"><span>➕</span> Tambah Unit EV Baru</h4>
+        <button class="btn-close-ent" onclick="closeModal('modalAddUnit')">&times;</button>
+      </div>
+      <form id="formNewUnit">
+        <div class="modal-body-ent">
+          <div class="modal-form-grid" style="grid-template-columns: 1fr;">
+            <div class="form-group-ent">
+              <label class="form-label-ent">Kode Unit (Angka / ID, misal: 1661)</label>
+              <input type="text" id="addUnitCode" class="form-control-ent" placeholder="Misal: 1661" required>
+            </div>
+            <div class="form-group-ent">
+              <label class="form-label-ent">Model / Tipe Kendaraan</label>
+              <input type="text" id="addUnitType" class="form-control-ent" value="EV Dump Truck 90T" required>
+            </div>
+            <div class="form-group-ent">
+              <label class="form-label-ent">Status Operasional</label>
+              <select id="addUnitStatus" class="form-control-ent">
+                <option value="Aktif">Aktif Beroperasi</option>
+                <option value="Standby">Standby / Ready</option>
+                <option value="Breakdown">Breakdown / Maintenance</option>
+              </select>
+            </div>
+            <div class="form-group-ent">
+              <label class="form-label-ent">Catatan / Keterangan</label>
+              <input type="text" id="addUnitNote" class="form-control-ent" placeholder="Contoh: Unit Baru Q3 2026">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer-ent">
+          <button type="button" class="btn-show" style="background:#888; border-color:#777;" onclick="closeModal('modalAddUnit')">Batal</button>
+          <button type="submit" class="btn-export-green"><span>💾</span> Simpan Unit Baru</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       MODAL 7: EDIT DATA UNIT EV
+       ======================================================================= -->
+  <div class="modal-overlay" id="modalEditUnit">
+    <div class="modal-dialog" style="max-width: 440px;">
+      <div class="modal-header-ent">
+        <h4 class="modal-title-ent"><span>✏️</span> Edit Unit EV</h4>
+        <button class="btn-close-ent" onclick="closeModal('modalEditUnit')">&times;</button>
+      </div>
+      <form id="formEditUnit">
+        <input type="hidden" id="editUnitOldCode">
+        <div class="modal-body-ent">
+          <div class="modal-form-grid" style="grid-template-columns: 1fr;">
+            <div class="form-group-ent">
+              <label class="form-label-ent">Kode Unit</label>
+              <input type="text" id="editUnitCode" class="form-control-ent" required>
+            </div>
+            <div class="form-group-ent">
+              <label class="form-label-ent">Model / Tipe Kendaraan</label>
+              <input type="text" id="editUnitType" class="form-control-ent" required>
+            </div>
+            <div class="form-group-ent">
+              <label class="form-label-ent">Status Operasional</label>
+              <select id="editUnitStatus" class="form-control-ent">
+                <option value="Aktif">Aktif Beroperasi</option>
+                <option value="Standby">Standby / Ready</option>
+                <option value="Breakdown">Breakdown / Maintenance</option>
+              </select>
+            </div>
+            <div class="form-group-ent">
+              <label class="form-label-ent">Catatan / Keterangan</label>
+              <input type="text" id="editUnitNote" class="form-control-ent">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer-ent">
+          <button type="button" class="btn-show" style="background:#888; border-color:#777;" onclick="closeModal('modalEditUnit')">Batal</button>
+          <button type="submit" class="btn-export-green"><span>💾</span> Simpan Perubahan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       MODAL 8: DELETE UNIT CONFIRMATION
+       ======================================================================= -->
+  <div class="modal-overlay" id="modalDeleteUnit">
+    <div class="modal-dialog" style="max-width: 400px;">
+      <div class="modal-header-ent">
+        <h4 class="modal-title-ent" style="color: var(--primary-red);"><span>🗑️</span> Hapus Unit EV</h4>
+        <button class="btn-close-ent" onclick="closeModal('modalDeleteUnit')">&times;</button>
+      </div>
+      <div class="modal-body-ent">
+        <p style="font-size: 13px;">Apakah Anda yakin ingin menghapus unit <strong id="delUnitCodeText" style="color: #d32f2f;">-</strong> dari populasi armada?</p>
+        <p style="font-size: 11px; color: #888; margin-top: 6px;">Unit ini tidak akan lagi muncul dalam pilihan logsheet charging.</p>
+      </div>
+      <div class="modal-footer-ent">
+        <button type="button" class="btn-show" style="background:#888; border-color:#777;" onclick="closeModal('modalDeleteUnit')">Batal</button>
+        <button type="button" class="btn-show" style="background: var(--btn-red); border-color: #c23321;" id="btnDoDeleteUnit">Ya, Hapus Unit</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       MODAL 9: LAPOR GANGGUAN BARU (PROBLEM & DOWNTIME)
+       ======================================================================= -->
+  <div class="modal-overlay" id="modalAddProblem">
+    <div class="modal-dialog" style="max-width: 520px;">
+      <div class="modal-header-ent" style="background: linear-gradient(135deg, #b71c1c, #d32f2f); color: #fff;">
+        <h4 class="modal-title-ent" style="color: #fff;"><span>🚨</span> Lapor Gangguan & Downtime Baru</h4>
+        <button type="button" class="btn-close-ent" onclick="closeModal('modalAddProblem')" style="color: #fff;">&times;</button>
+      </div>
+      <form id="formNewProblem">
+        <div class="modal-body-ent">
+          <div class="modal-form-grid" style="grid-template-columns: 1fr 1fr;">
+            <div class="form-group-ent">
+              <label class="form-label-ent">Tanggal Kejadian <span style="color:#d32f2f;">*</span></label>
+              <input type="date" id="addProbDate" class="form-control-ent" required>
+            </div>
+            <div class="form-group-ent">
+              <label class="form-label-ent">Shift Kerja <span style="color:#d32f2f;">*</span></label>
+              <select id="addProbShift" class="form-control-ent" required>
+                <option value="1">Shift 1</option>
+                <option value="2">Shift 2</option>
+              </select>
+            </div>
+            <div class="form-group-ent" style="grid-column: 1 / -1;">
+              <label class="form-label-ent">Unit Truk EV / Fasilitas Terkendala <span style="color:#d32f2f;">*</span></label>
+              <div style="display: flex; gap: 8px;">
+                <select id="addProbUnitSelect" class="form-control-ent" style="flex: 1;">
+                  <!-- Populated dynamically via JS -->
+                </select>
+                <input type="text" id="addProbUnitCustom" class="form-control-ent" placeholder="Atau ketik manual unit/alat..." style="flex: 1;">
+              </div>
+            </div>
+            <div class="form-group-ent" style="grid-column: 1 / -1;">
+              <label class="form-label-ent">Deskripsi Masalah / Indikasi Kerusakan <span style="color:#d32f2f;">*</span></label>
+              <textarea id="addProbDesc" class="form-control-ent" rows="2" placeholder="Contoh: Crane OHC macet saat proses swap baterai..." required style="resize: vertical; font-size: 13px;"></textarea>
+            </div>
+            <div class="form-group-ent">
+              <label class="form-label-ent">Jam Mulai (Time Open) <span style="color:#d32f2f;">*</span></label>
+              <input type="time" id="addProbTimeOpen" step="1" class="form-control-ent" required>
+            </div>
+            <div class="form-group-ent">
+              <label class="form-label-ent">Jam Selesai (Time Close) <span style="color:#d32f2f;">*</span></label>
+              <input type="time" id="addProbTimeClose" step="1" class="form-control-ent" required>
+            </div>
+            <div class="form-group-ent" style="grid-column: 1 / -1;">
+              <label class="form-label-ent">Kalkulasi Durasi Downtime (Otomatis)</label>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <input type="text" id="addProbDuration" class="form-control-ent" readonly value="0:00:00" style="background:#f1f5f9; font-family:var(--font-mono); font-weight:700; color:#b91c1c; font-size:14px; max-width: 140px;">
+                <span style="font-size: 11.5px; color: #64748b;">(Dihitung otomatis dari selisih Jam Mulai &amp; Jam Selesai)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer-ent">
+          <button type="button" class="btn-show" style="background:#888; border-color:#777;" onclick="closeModal('modalAddProblem')">Batal</button>
+          <button type="submit" class="btn-export-green" style="background: var(--btn-red); border-color: #c23321;"><span>🚨</span> Simpan Laporan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       MODAL 10: EDIT CATATAN GANGGUAN (PROBLEM & DOWNTIME)
+       ======================================================================= -->
+  <div class="modal-overlay" id="modalEditProblem">
+    <div class="modal-dialog" style="max-width: 520px;">
+      <div class="modal-header-ent" style="background: #2c3b41; color: #fff;">
+        <h4 class="modal-title-ent" style="color: #fff;"><span>✏️</span> Edit Catatan Gangguan</h4>
+        <button type="button" class="btn-close-ent" onclick="closeModal('modalEditProblem')" style="color: #fff;">&times;</button>
+      </div>
+      <form id="formEditProblem">
+        <input type="hidden" id="editProbId">
+        <div class="modal-body-ent">
+          <div class="modal-form-grid" style="grid-template-columns: 1fr 1fr;">
+            <div class="form-group-ent">
+              <label class="form-label-ent">Tanggal Kejadian <span style="color:#d32f2f;">*</span></label>
+              <input type="date" id="editProbDate" class="form-control-ent" required>
+            </div>
+            <div class="form-group-ent">
+              <label class="form-label-ent">Shift Kerja <span style="color:#d32f2f;">*</span></label>
+              <select id="editProbShift" class="form-control-ent" required>
+                <option value="1">Shift 1</option>
+                <option value="2">Shift 2</option>
+              </select>
+            </div>
+            <div class="form-group-ent" style="grid-column: 1 / -1;">
+              <label class="form-label-ent">Unit Truk EV / Fasilitas <span style="color:#d32f2f;">*</span></label>
+              <input type="text" id="editProbUnit" class="form-control-ent" placeholder="Misal: 1606 atau CRANE OHC" required>
+            </div>
+            <div class="form-group-ent" style="grid-column: 1 / -1;">
+              <label class="form-label-ent">Deskripsi Masalah <span style="color:#d32f2f;">*</span></label>
+              <textarea id="editProbDesc" class="form-control-ent" rows="2" required style="resize: vertical; font-size: 13px;"></textarea>
+            </div>
+            <div class="form-group-ent">
+              <label class="form-label-ent">Jam Mulai (Time Open) <span style="color:#d32f2f;">*</span></label>
+              <input type="time" id="editProbTimeOpen" step="1" class="form-control-ent" required>
+            </div>
+            <div class="form-group-ent">
+              <label class="form-label-ent">Jam Selesai (Time Close) <span style="color:#d32f2f;">*</span></label>
+              <input type="time" id="editProbTimeClose" step="1" class="form-control-ent" required>
+            </div>
+            <div class="form-group-ent" style="grid-column: 1 / -1;">
+              <label class="form-label-ent">Kalkulasi Durasi Downtime</label>
+              <input type="text" id="editProbDuration" class="form-control-ent" readonly style="background:#f1f5f9; font-family:var(--font-mono); font-weight:700; color:#b91c1c; font-size:14px; max-width: 140px;">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer-ent">
+          <button type="button" class="btn-show" style="background:#888; border-color:#777;" onclick="closeModal('modalEditProblem')">Batal</button>
+          <button type="submit" class="btn-export-green"><span>💾</span> Simpan Perubahan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       MODAL 11: DELETE PROBLEM CONFIRMATION
+       ======================================================================= -->
+  <div class="modal-overlay" id="modalDeleteProblem">
+    <div class="modal-dialog" style="max-width: 400px;">
+      <div class="modal-header-ent">
+        <h4 class="modal-title-ent" style="color: var(--primary-red);"><span>🗑️</span> Hapus Catatan Gangguan</h4>
+        <button type="button" class="btn-close-ent" onclick="closeModal('modalDeleteProblem')">&times;</button>
+      </div>
+      <div class="modal-body-ent">
+        <p style="font-size: 13px;">Apakah Anda yakin ingin menghapus catatan kendala unit <strong id="delProbUnitText" style="color: #0b5394;">-</strong>?</p>
+        <p style="font-size: 11px; color: #888; margin-top: 6px;" id="delProbDescPreview">-</p>
+      </div>
+      <div class="modal-footer-ent">
+        <button type="button" class="btn-show" style="background:#888; border-color:#777;" onclick="closeModal('modalDeleteProblem')">Batal</button>
+        <button type="button" class="btn-show" style="background: var(--btn-red); border-color: #c23321;" id="btnDoDeleteProblem">Ya, Hapus Catatan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       MODAL 12: EXECUTIVE CLEAN LOGOUT CONFIRMATION DIALOG (ANIMATED)
+       ======================================================================= -->
+  <div class="modal-overlay logout-modal-overlay" id="modalConfirmLogout">
+    <div class="modal-dialog logout-modal-card">
+      <button type="button" class="btn-close-ent logout-modal-close" onclick="closeModal('modalConfirmLogout')" title="Tutup">&times;</button>
+      
+      <div class="logout-modal-content">
+        <!-- Sleek Vector SVG Logout Icon with Pulsing Halo -->
+        <div class="logout-icon-wrap">
+          <div class="logout-icon-pulse"></div>
+          <svg class="logout-door-svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+        </div>
+
+        <h3 class="logout-modal-title">Keluar dari Aplikasi?</h3>
+        
+        <div class="logout-user-highlight">
+          <div class="logout-user-avatar">👤</div>
+          <div class="logout-user-details">
+            <span class="logout-user-name" id="logoutModalUserName">ZAKARIYA ABIDIN</span>
+            <div class="logout-user-meta">
+              <span class="logout-user-badge loc" id="logoutModalUserStation">ROOM A1</span>
+              <span class="logout-user-badge shift" id="logoutModalUserShift">Shift 1</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="logout-modal-desc">
+          Sesi operasional Anda akan diakhiri. Pastikan seluruh input data Anda telah tersimpan.
+        </p>
+
+        <div class="logout-modal-actions">
+          <button type="button" class="btn-logout-cancel" onclick="closeModal('modalConfirmLogout')">
+            Batal
+          </button>
+          <button type="button" class="btn-logout-confirm" id="btnConfirmDoLogout">
+            <span>🚪</span> Ya, Keluar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       MODAL 13: DUAL-MODE TIME PICKER (ANALOG CLOCK & DIGITAL SCROLL WHEEL)
+       ======================================================================= -->
+  <div class="modal-overlay" id="modalTimePicker">
+    <div class="modal-dialog time-picker-dialog">
+      <div class="modal-header-ent" style="background: linear-gradient(135deg, #0f172a, #1e293b); color: #fff; padding: 12px 16px;">
+        <div>
+          <h4 class="modal-title-ent" id="tpModalTitle" style="color: #fff; display: flex; align-items: center; gap: 8px;">
+            <span>⏱️</span> Pilih Waktu Operasional
+          </h4>
+          <div id="tpFieldSubtitle" style="font-size: 11px; color: #94a3b8; font-weight: 600; margin-top: 2px;">
+            Menentukan Jam Masuk / Keluar
+          </div>
+        </div>
+        <button type="button" class="btn-close-ent" onclick="closeModal('modalTimePicker')" style="color: #fff;">&times;</button>
+      </div>
+
+      <div class="modal-body-ent tp-body">
+        <!-- Dual Mode Switcher Tabs -->
+        <div class="tp-mode-tabs">
+          <button type="button" class="tp-tab-btn active" id="tpTabDigital" onclick="switchTimePickerMode('digital')">
+            <span>📱</span> Scroll Digital
+          </button>
+          <button type="button" class="tp-tab-btn" id="tpTabAnalog" onclick="switchTimePickerMode('analog')">
+            <span>🕒</span> Jam Analog
+          </button>
+        </div>
+
+        <!-- Big Visual Time Summary Display -->
+        <div class="tp-display-banner">
+          <div class="tp-banner-box tp-active-part" id="tpDisplayHour" onclick="focusTimePart('hour')">08</div>
+          <span class="tp-banner-colon">:</span>
+          <div class="tp-banner-box" id="tpDisplayMinute" onclick="focusTimePart('minute')">00</div>
+          <div class="tp-banner-period" id="tpDisplayPeriod">PAGI</div>
+        </div>
+
+        <!-- MODE 1: DIGITAL SCROLL WHEEL (No Keyboard Typing!) -->
+        <div class="tp-view-container" id="tpViewDigital">
+          <div class="tp-wheels-wrapper">
+            <!-- Hour Roller Column -->
+            <div class="tp-wheel-column">
+              <div class="tp-wheel-label">JAM (00 - 23)</div>
+              <button type="button" class="tp-stepper-arrow" onclick="stepTimeValue('hour', -1)" title="Kurang 1 Jam">▲</button>
+              <div class="tp-wheel-scroll-area" id="tpHourScroll">
+                <!-- 00 to 23 rendered via JS -->
+              </div>
+              <button type="button" class="tp-stepper-arrow" onclick="stepTimeValue('hour', 1)" title="Tambah 1 Jam">▼</button>
+            </div>
+
+            <div class="tp-wheel-divider">:</div>
+
+            <!-- Minute Roller Column -->
+            <div class="tp-wheel-column">
+              <div class="tp-wheel-label">MENIT (00 - 59)</div>
+              <button type="button" class="tp-stepper-arrow" onclick="stepTimeValue('minute', -1)" title="Kurang 1 Menit">▲</button>
+              <div class="tp-wheel-scroll-area" id="tpMinuteScroll">
+                <!-- 00 to 59 rendered via JS -->
+              </div>
+              <button type="button" class="tp-stepper-arrow" onclick="stepTimeValue('minute', 1)" title="Tambah 1 Menit">▼</button>
+            </div>
+          </div>
+
+          <!-- Quick Jump Minute Chips -->
+          <div class="tp-quick-chips-section">
+            <span style="font-size: 10.5px; font-weight: 700; color: #64748b; margin-bottom: 6px; display: block;">LOMPAT MENIT CEPAT:</span>
+            <div class="tp-minute-chips-grid">
+              <button type="button" class="tp-min-chip" onclick="setTimeMinuteValue(0)">:00</button>
+              <button type="button" class="tp-min-chip" onclick="setTimeMinuteValue(5)">:05</button>
+              <button type="button" class="tp-min-chip" onclick="setTimeMinuteValue(10)">:10</button>
+              <button type="button" class="tp-min-chip" onclick="setTimeMinuteValue(15)">:15</button>
+              <button type="button" class="tp-min-chip" onclick="setTimeMinuteValue(20)">:20</button>
+              <button type="button" class="tp-min-chip" onclick="setTimeMinuteValue(25)">:25</button>
+              <button type="button" class="tp-min-chip" onclick="setTimeMinuteValue(30)">:30</button>
+              <button type="button" class="tp-min-chip" onclick="setTimeMinuteValue(35)">:35</button>
+              <button type="button" class="tp-min-chip" onclick="setTimeMinuteValue(40)">:40</button>
+              <button type="button" class="tp-min-chip" onclick="setTimeMinuteValue(45)">:45</button>
+              <button type="button" class="tp-min-chip" onclick="setTimeMinuteValue(50)">:50</button>
+              <button type="button" class="tp-min-chip" onclick="setTimeMinuteValue(55)">:55</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- MODE 2: ANALOG CLOCK (Interactive Clock Face) -->
+        <div class="tp-view-container" id="tpViewAnalog" style="display: none;">
+          <div class="tp-analog-toggle-sub">
+            <button type="button" class="tp-sub-tab active" id="tpAnalogSubHour" onclick="switchAnalogSubMode('hour')">Atur Jam</button>
+            <button type="button" class="tp-sub-tab" id="tpAnalogSubMinute" onclick="switchAnalogSubMode('minute')">Atur Menit</button>
+          </div>
+          <div class="tp-clock-face-container">
+            <div class="tp-clock-face" id="tpClockFace">
+              <div class="tp-clock-center-dot"></div>
+              <div class="tp-clock-hand" id="tpClockHand">
+                <div class="tp-clock-hand-pin"></div>
+              </div>
+              <div class="tp-clock-numbers" id="tpClockNumbers">
+                <!-- Numbers rendered with trigonometry angles -->
+              </div>
+            </div>
+          </div>
+          <div style="text-align: center; font-size: 11px; color: #64748b; margin-top: 8px;">
+            Sentuh angka pada piringan jam untuk mengubah waktu
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer-ent tp-footer" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: #f8fafc; border-top: 1px solid #e2e8f0;">
+        <button type="button" class="btn-tp-now" onclick="tpSetCurrentTime()" title="Gunakan Jam Sekarang">
+          <span>🕒</span> Sekarang (Now)
+        </button>
+        <div style="display: flex; gap: 8px;">
+          <button type="button" class="btn-show" style="background: #94a3b8; border-color: #64748b;" onclick="closeModal('modalTimePicker')">Batal</button>
+          <button type="button" class="btn-export-green" id="btnTpApply" onclick="confirmTimePickerSelection()">
+            <span>✅</span> Terapkan Jam
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       MODAL DB 1: TAMBAH / EDIT PENGGUNA (USER)
+       ======================================================================= -->
+  <div class="modal-overlay" id="modalDbUser">
+    <div class="modal-dialog">
+      <div class="modal-header-ent">
+        <h4 class="modal-title-ent" id="modalDbUserTitle"><span>👥</span> Tambah Pengguna Baru</h4>
+        <button class="btn-close-ent" onclick="closeModal('modalDbUser')">&times;</button>
+      </div>
+      <form id="formDbUser">
+        <input type="hidden" id="dbUserMode" value="add">
+        <input type="hidden" id="dbUserOriginalNik" value="">
+        <div class="modal-body-ent">
+          <div class="form-row-ent">
+            <div class="form-group-ent">
+              <label class="form-label-ent" for="dbUserNik">NIK (Nomor Induk Karyawan) <span class="required-star">*</span></label>
+              <input type="text" id="dbUserNik" class="form-control-ent" placeholder="Contoh: 81230599" required autocomplete="off">
+            </div>
+            <div class="form-group-ent">
+              <label class="form-label-ent" for="dbUserRole">Role / Hak Akses <span class="required-star">*</span></label>
+              <select id="dbUserRole" class="form-control-ent" required>
+                <option value="OPERATOR">OPERATOR (Charging Man)</option>
+                <option value="SUPERVISOR">SUPERVISOR / LEADER / ADMIN</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group-ent">
+            <label class="form-label-ent" for="dbUserName">Nama Lengkap Pengguna <span class="required-star">*</span></label>
+            <input type="text" id="dbUserName" class="form-control-ent" placeholder="Masukkan nama lengkap operator/spv" required autocomplete="off">
+          </div>
+
+          <div class="form-row-ent">
+            <div class="form-group-ent">
+              <label class="form-label-ent" for="dbUserTitle">Jabatan (Title Operasional)</label>
+              <input type="text" id="dbUserTitle" class="form-control-ent" placeholder="Contoh: CHARGING MAN" value="CHARGING MAN">
+            </div>
+            <div class="form-group-ent">
+              <label class="form-label-ent" for="dbUserPassword">Password Login <span class="required-star">*</span></label>
+              <input type="text" id="dbUserPassword" class="form-control-ent" placeholder="Default: NIK pengguna" required autocomplete="off">
+              <span style="font-size: 10px; color: #64748b; margin-top: 3px; display: block;">Jika dikosongkan saat tambah, password akan otomatis diisi sama dengan NIK.</span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer-ent">
+          <button type="button" class="btn-show" style="background: #94a3b8; border-color: #64748b;" onclick="closeModal('modalDbUser')">Batal</button>
+          <button type="submit" class="btn-export-green" id="btnDbSaveUser">
+            <span>💾</span> Simpan Data Pengguna
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       MODAL DB 2: EDIT TRANSAKSI SWAP (KOREKSI DATA)
+       ======================================================================= -->
+  <div class="modal-overlay" id="modalDbEditSwap">
+    <div class="modal-dialog modal-dialog-wide">
+      <div class="modal-header-ent">
+        <h4 class="modal-title-ent"><span>✏️</span> Edit &amp; Koreksi Data Transaksi Swap</h4>
+        <button class="btn-close-ent" onclick="closeModal('modalDbEditSwap')">&times;</button>
+      </div>
+      <form id="formDbEditSwap">
+        <input type="hidden" id="dbEditSwapId">
+        <div class="modal-body-ent">
+          <div class="form-row-3col">
+            <div class="form-group-ent">
+              <label class="form-label-ent">ID Transaksi</label>
+              <input type="text" id="dbEditSwapIdDisplay" class="form-control-ent" readonly style="background: #f1f5f9; font-weight: 700;">
+            </div>
+            <div class="form-group-ent">
+              <label class="form-label-ent" for="dbEditSwapDate">Tanggal</label>
+              <input type="text" id="dbEditSwapDate" class="form-control-ent" required>
+            </div>
+            <div class="form-group-ent">
+              <label class="form-label-ent" for="dbEditSwapShift">Shift</label>
+              <select id="dbEditSwapShift" class="form-control-ent">
+                <option value="1">Shift 1</option>
+                <option value="2">Shift 2</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row-3col">
+            <div class="form-group-ent">
+              <label class="form-label-ent" for="dbEditSwapUnit">Unit DT</label>
+              <input type="text" id="dbEditSwapUnit" class="form-control-ent" required>
+            </div>
+            <div class="form-group-ent">
+              <label class="form-label-ent" for="dbEditSwapLocation">Lokasi Swap</label>
+              <input type="text" id="dbEditSwapLocation" class="form-control-ent">
+            </div>
+            <div class="form-group-ent">
+              <label class="form-label-ent" for="dbEditSwapHm">HM</label>
+              <input type="text" id="dbEditSwapHm" class="form-control-ent">
+            </div>
+          </div>
+
+          <div class="form-row-ent">
+            <div class="form-group-ent">
+              <label class="form-label-ent" for="dbEditSwapBatBefore">Battery Before (%)</label>
+              <input type="number" id="dbEditSwapBatBefore" class="form-control-ent" min="0" max="100">
+            </div>
+            <div class="form-group-ent">
+              <label class="form-label-ent" for="dbEditSwapJamIn">Jam Masuk (In)</label>
+              <input type="text" id="dbEditSwapJamIn" class="form-control-ent" placeholder="HH:MM">
+            </div>
+            <div class="form-group-ent">
+              <label class="form-label-ent" for="dbEditSwapBatAfter">Battery After (%)</label>
+              <input type="number" id="dbEditSwapBatAfter" class="form-control-ent" min="0" max="100">
+            </div>
+            <div class="form-group-ent">
+              <label class="form-label-ent" for="dbEditSwapJamOut">Jam Keluar (Out)</label>
+              <input type="text" id="dbEditSwapJamOut" class="form-control-ent" placeholder="HH:MM">
+            </div>
+          </div>
+
+          <div class="form-row-ent">
+            <div class="form-group-ent">
+              <label class="form-label-ent" for="dbEditSwapRemark">Status Remark</label>
+              <input type="text" id="dbEditSwapRemark" class="form-control-ent">
+            </div>
+            <div class="form-group-ent">
+              <label class="form-label-ent" for="dbEditSwapProblem">Problem Remark</label>
+              <input type="text" id="dbEditSwapProblem" class="form-control-ent">
+            </div>
+          </div>
+
+          <div class="form-row-ent">
+            <div class="form-group-ent">
+              <label class="form-label-ent" for="dbEditSwapOperator">Operator Nama</label>
+              <input type="text" id="dbEditSwapOperator" class="form-control-ent">
+            </div>
+            <div class="form-group-ent">
+              <label class="form-label-ent" for="dbEditSwapNik">Operator NIK</label>
+              <input type="text" id="dbEditSwapNik" class="form-control-ent">
+            </div>
+            <div class="form-group-ent">
+              <label class="form-label-ent" for="dbEditSwapKeterangan">Keterangan / Time Sch</label>
+              <input type="text" id="dbEditSwapKeterangan" class="form-control-ent">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer-ent">
+          <button type="button" class="btn-show" style="background: #94a3b8; border-color: #64748b;" onclick="closeModal('modalDbEditSwap')">Batal</button>
+          <button type="submit" class="btn-export-green" id="btnDbSaveEditSwap">
+            <span>💾</span> Simpan Perubahan
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       MODAL DB 3: TAMBAH / EDIT JADWAL (SCHEDULE)
+       ======================================================================= -->
+  <div class="modal-overlay" id="modalDbSchedule">
+    <div class="modal-dialog">
+      <div class="modal-header-ent">
+        <h4 class="modal-title-ent" id="modalDbScheduleTitle"><span>🎯</span> Tambah Jadwal Swap</h4>
+        <button class="btn-close-ent" onclick="closeModal('modalDbSchedule')">&times;</button>
+      </div>
+      <form id="formDbSchedule">
+        <input type="hidden" id="dbScheduleEditIndex" value="-1">
+        <div class="modal-body-ent">
+          <div class="form-row-ent">
+            <div class="form-group-ent">
+              <label class="form-label-ent" for="dbSchDate">Tanggal <span class="required-star">*</span></label>
+              <input type="text" id="dbSchDate" class="form-control-ent" placeholder="DD/MM/YYYY" required>
+            </div>
+            <div class="form-group-ent">
+              <label class="form-label-ent" for="dbSchShift">Shift <span class="required-star">*</span></label>
+              <select id="dbSchShift" class="form-control-ent" required>
+                <option value="1">Shift 1 (Siang)</option>
+                <option value="2">Shift 2 (Malam)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row-ent">
+            <div class="form-group-ent">
+              <label class="form-label-ent" for="dbSchUnit">Kode Unit DT <span class="required-star">*</span></label>
+              <input type="text" id="dbSchUnit" class="form-control-ent" placeholder="Contoh: 1601" required>
+            </div>
+            <div class="form-group-ent">
+              <label class="form-label-ent" for="dbSchTime">Target Jam (Time Sch) <span class="required-star">*</span></label>
+              <input type="text" id="dbSchTime" class="form-control-ent" placeholder="Contoh: 07:00:00" required>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer-ent">
+          <button type="button" class="btn-show" style="background: #94a3b8; border-color: #64748b;" onclick="closeModal('modalDbSchedule')">Batal</button>
+          <button type="submit" class="btn-export-green" id="btnDbSaveSchedule">
+            <span>💾</span> Simpan Jadwal
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       MODAL DB 4: KONFIRMASI HAPUS DATA
+       ======================================================================= -->
+  <div class="modal-overlay" id="modalDbConfirmDelete">
+    <div class="modal-dialog" style="max-width: 440px;">
+      <div class="modal-header-ent" style="background: #ef4444;">
+        <h4 class="modal-title-ent" style="color: #ffffff;"><span>⚠️</span> Konfirmasi Hapus Data</h4>
+        <button class="btn-close-ent" onclick="closeModal('modalDbConfirmDelete')">&times;</button>
+      </div>
+      <div class="modal-body-ent" style="padding: 20px; text-align: center;">
+        <div style="font-size: 40px; margin-bottom: 12px;">🗑️</div>
+        <h3 id="modalDbDeleteHeading" style="font-size: 16px; font-weight: 700; color: #0f172a; margin-bottom: 8px;">Hapus Data Ini?</h3>
+        <p id="modalDbDeleteMsg" style="font-size: 13px; color: #64748b; line-height: 1.45; margin: 0 0 16px 0;">Data yang dihapus tidak dapat dipulihkan kembali.</p>
+      </div>
+      <div class="modal-footer-ent" style="display: flex; justify-content: flex-end; gap: 8px; padding: 12px 16px;">
+        <button type="button" class="btn-show" style="background: #94a3b8; border-color: #64748b;" onclick="closeModal('modalDbConfirmDelete')">Batal</button>
+        <button type="button" class="btn-export-green" id="btnDbConfirmDeleteAction" style="background: #dc2626; border-color: #b91c1c;">
+          <span>🗑️</span> Ya, Hapus Sekarang
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       MODAL: UPLOAD FILE JADWAL (EXCEL / CSV BULK IMPORT)
+       ======================================================================= -->
+  <div class="modal-overlay" id="modalUploadScheduleExcel">
+    <div class="modal-dialog" style="max-width: 640px;">
+      <div class="modal-header-ent">
+        <h4 class="modal-title-ent"><span>📂</span> Upload Berkas Jadwal (Excel / CSV)</h4>
+        <button class="btn-close-ent" onclick="closeModal('modalUploadScheduleExcel')">&times;</button>
+      </div>
+      <div class="modal-body-ent" style="padding: 16px 20px;">
+        
+        <!-- Drag & Drop Upload Zone -->
+        <div id="dropZoneScheduleExcel" style="border: 2px dashed #3b82f6; border-radius: 10px; padding: 24px 16px; text-align: center; background: #f8fafc; cursor: pointer; transition: all 0.2s ease;">
+          <div style="font-size: 38px; margin-bottom: 8px;">📊</div>
+          <div style="font-size: 14px; font-weight: 700; color: #1e293b; margin-bottom: 4px;">
+            Klik untuk pilih file Excel atau geser file ke sini
+          </div>
+          <div style="font-size: 12px; color: #64748b;">
+            Mendukung format Microsoft Excel (<strong>.xlsx</strong>, <strong>.xls</strong>) dan CSV (<strong>.csv</strong>)
+          </div>
+          <input type="file" id="inputScheduleExcelFile" accept=".xlsx,.xls,.csv" style="display: none;">
+        </div>
+
+        <!-- File Info & Parse Status -->
+        <div id="uploadScheduleStatusBox" style="display: none; margin-top: 14px; padding: 10px 14px; border-radius: 8px; background: #eff6ff; border: 1px solid #bfdbfe; font-size: 12.5px; color: #1e40af;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span id="uploadScheduleFileName"><strong>file.xlsx</strong> (0 KB)</span>
+            <span id="uploadScheduleRowCount" style="font-weight: 700; background: #2563eb; color: #ffffff; padding: 2px 8px; border-radius: 12px; font-size: 11px;">0 Data</span>
+          </div>
+        </div>
+
+        <!-- Preview Table of parsed rows -->
+        <div id="uploadSchedulePreviewBox" style="display: none; margin-top: 14px;">
+          <div style="font-size: 11.5px; font-weight: 700; color: #475569; margin-bottom: 6px;">PRATINJAU DATA (5 BARIS PERTAMA):</div>
+          <div style="max-height: 180px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 6px;">
+            <table class="enterprise-data-table" style="font-size: 11.5px; margin: 0;">
+              <thead>
+                <tr>
+                  <th style="padding: 6px 10px;">Tanggal</th>
+                  <th style="padding: 6px 10px;">Shift</th>
+                  <th style="padding: 6px 10px;">Kode Unit</th>
+                  <th style="padding: 6px 10px;">Target Jam</th>
+                </tr>
+              </thead>
+              <tbody id="uploadSchedulePreviewBody">
+                <!-- Populated via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Import Mode Option -->
+        <div style="margin-top: 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px;">
+          <div style="font-size: 12px; font-weight: 700; color: #1e293b; margin-bottom: 8px;">PILIHAN PENERAPAN JADWAL:</div>
+          <div style="display: flex; flex-direction: column; gap: 8px; font-size: 12.5px; color: #334155;">
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+              <input type="radio" name="radScheduleImportMode" value="overwrite" checked>
+              <span><strong>Ganti / Timpa Semua Jadwal (Overwrite)</strong> — Jadwal lama dihapus, diganti isi file Excel ini.</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+              <input type="radio" name="radScheduleImportMode" value="append">
+              <span><strong>Gabungkan ke Jadwal Saat Ini (Append)</strong> — Menambahkan data dari Excel ke jadwal yang sudah ada.</span>
+            </label>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer-ent" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 20px;">
+        <button type="button" class="btn-show" onclick="downloadScheduleTemplateExcel()" style="background: #ffffff; border: 1px solid #cbd5e1; color: #475569;">
+          <span>📥</span> Unduh Format Template
+        </button>
+        <div style="display: flex; gap: 8px;">
+          <button type="button" class="btn-show" style="background: #94a3b8; border-color: #64748b;" onclick="closeModal('modalUploadScheduleExcel')">Batal</button>
+          <button type="button" class="btn-export-green" id="btnApplyScheduleImport" disabled style="opacity: 0.6; cursor: not-allowed;">
+            <span>🚀</span> Terapkan ke Jadwal Operasional
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Scripts -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

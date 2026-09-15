@@ -1,0 +1,14 @@
+# Dependencies
+node_modules/
+
+# Local backup & archives
+backup_sebelum_update/
+*.zip
+
+# Local credentials & logs
+.clasp.json
+*.log
+
+# OS Generated
+Thumbs.db
+.DS_Store
